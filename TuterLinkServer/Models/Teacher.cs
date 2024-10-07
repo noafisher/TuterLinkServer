@@ -15,11 +15,6 @@ public partial class Teacher
     [StringLength(100)]
     public string? Email { get; set; }
 
-    [StringLength(50)]
-    public string? FirstName { get; set; }
-
-    [StringLength(50)]
-    public string? LastName { get; set; }
 
     [ForeignKey("Email")]
     [InverseProperty("Teachers")]

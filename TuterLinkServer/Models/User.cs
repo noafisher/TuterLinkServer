@@ -17,6 +17,12 @@ public partial class User
 
     [Column("TypeID")]
     public int? TypeId { get; set; }
+    [StringLength(50)]
+    public string? FirstName { get; set; }
+
+    [StringLength(50)]
+    public string? LastName { get; set; }
+
 
     [InverseProperty("EmailNavigation")]
     public virtual ICollection<Student> Students { get; set; } = new List<Student>();

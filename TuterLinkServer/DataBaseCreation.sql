@@ -14,6 +14,8 @@ Go
 CREATE TABLE Users(
     Email nvarchar(100) PRIMARY KEY ,
     Pass nvarchar(25) ,
+    FirstName nvarchar(50),
+    LastName nvarchar(50),
     TypeID int,
     FOREIGN KEY(TypeID) REFERENCES TypeUser(TypeID)
     )
@@ -29,16 +31,14 @@ CREATE TABLE Students(
     StudentID int PRIMARY KEY,
     Email nvarchar(100),
      FOREIGN KEY(Email) REFERENCES Users(Email),
-    FirstName nvarchar(50),
-    LastName nvarchar(50)
+    
     )
 
 CREATE TABLE Teachers(
     TeacherID int PRIMARY KEY,
     Email nvarchar(100),
      FOREIGN KEY(Email) REFERENCES Users(Email),
-    FirstName nvarchar(50),
-    LastName nvarchar(50)
+    
     )
 
 CREATE TABLE StudentToTeachers(
