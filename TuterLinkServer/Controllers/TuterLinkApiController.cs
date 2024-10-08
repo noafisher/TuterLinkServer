@@ -47,6 +47,7 @@ namespace TuterLinkServer.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+                //
             }
 
         }
