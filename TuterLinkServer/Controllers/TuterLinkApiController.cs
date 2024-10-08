@@ -19,6 +19,40 @@ namespace TuterLinkServer.Controllers
             this.webHostEnvironment = env;
         }
 
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] DTO.UserDTO userDto)
+        {
+            try
+            {
+                HttpContext.Session.Clear(); //Logout any previous login attempt
+
+                //Get model user class from DB with matching email. 
+                Models.User modelsUser = new User()
+                {
+                    FirstName = userDto.FirstName,
+                    LastName = userDto.LastName,
+                    Email = userDto.Email,
+                    Pass = userDto.Pass,
+                    TypeId = userDto.TypeId
+                };
+
+                context.Users.Add(modelsUser);
+                context.SaveChanges();
+
+                //User was added!
+                DTO.UserDTO dtoUser = new DTO.UserDTO(modelsUser);
+                //dtoUser.ProfileImagePath = GetProfileImageVirtualPath(dtoUser.Id);
+                return Ok(dtoUser);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
     }
+
+    
 
 }
