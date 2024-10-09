@@ -1,4 +1,4 @@
-﻿namespace TuterLinkServer.DTO
+﻿namespace TutorLinkServer.DTO
 {
     public class UserDTO
     {

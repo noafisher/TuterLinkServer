@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace TuterLinkServer.Models;
+namespace TutorLinkServer.Models;
 
 public partial class Student
 {
@@ -12,14 +12,12 @@ public partial class Student
     [Column("StudentID")]
     public int StudentId { get; set; }
 
-    [StringLength(100)]
-    public string? Email { get; set; }
-
-  
-    [ForeignKey("Email")]
-    [InverseProperty("Students")]
-    public virtual User? EmailNavigation { get; set; }
+    public int? UserId { get; set; }
 
     [InverseProperty("Student")]
     public virtual ICollection<StudentToTeacher> StudentToTeachers { get; set; } = new List<StudentToTeacher>();
+
+    [ForeignKey("UserId")]
+    [InverseProperty("Students")]
+    public virtual User? User { get; set; }
 }

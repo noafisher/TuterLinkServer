@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace TuterLinkServer.Models;
+namespace TutorLinkServer.Models;
 
 [Table("City")]
 public partial class City

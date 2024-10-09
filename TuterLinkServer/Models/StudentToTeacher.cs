@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace TuterLinkServer.Models;
+namespace TutorLinkServer.Models;
 
-[PrimaryKey("TeacherId", "StudentId")]
+[PrimaryKey("TeacherId", "StudentId", "SubjectId")]
 public partial class StudentToTeacher
 {
     [Key]
@@ -17,8 +17,9 @@ public partial class StudentToTeacher
     [Column("TeacherID")]
     public int TeacherId { get; set; }
 
+    [Key]
     [Column("SubjectID")]
-    public int? SubjectId { get; set; }
+    public int SubjectId { get; set; }
 
     [ForeignKey("StudentId")]
     [InverseProperty("StudentToTeachers")]
@@ -26,7 +27,7 @@ public partial class StudentToTeacher
 
     [ForeignKey("SubjectId")]
     [InverseProperty("StudentToTeachers")]
-    public virtual Subject? Subject { get; set; }
+    public virtual Subject Subject { get; set; } = null!;
 
     [ForeignKey("TeacherId")]
     [InverseProperty("StudentToTeachers")]

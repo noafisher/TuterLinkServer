@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TuterLinkServer.Models;
+using TutorLinkServer.Models;
 
-namespace TuterLinkServer.Controllers
+namespace TutorLinkServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
