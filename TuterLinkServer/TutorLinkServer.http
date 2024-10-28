@@ -1,6 +1,6 @@
 @TuterLinkServer_HostAddress = http://localhost:5049
 
-GET {{TuterLinkServer_HostAddress}}/weatherforecast/
+GET {{TutorLinkServer_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
