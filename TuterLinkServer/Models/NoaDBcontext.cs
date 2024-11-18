@@ -37,14 +37,14 @@ public partial class NoaDBcontext : DbContext
     {
         modelBuilder.Entity<City>(entity =>
         {
-            entity.HasKey(e => e.CityId).HasName("PK__City__F2D21A9695277661");
+            entity.HasKey(e => e.CityId).HasName("PK__City__F2D21A961E7A0420");
 
             entity.Property(e => e.CityId).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<Student>(entity =>
         {
-            entity.HasKey(e => e.StudentId).HasName("PK__Students__32C52A794048C673");
+            entity.HasKey(e => e.StudentId).HasName("PK__Students__32C52A793507C5A1");
 
             entity.Property(e => e.StudentId).ValueGeneratedNever();
 
@@ -53,7 +53,7 @@ public partial class NoaDBcontext : DbContext
 
         modelBuilder.Entity<StudentToTeacher>(entity =>
         {
-            entity.HasKey(e => new { e.TeacherId, e.StudentId, e.SubjectId }).HasName("PK__StudentT__E7721040135AA71C");
+            entity.HasKey(e => new { e.TeacherId, e.StudentId, e.SubjectId }).HasName("PK__StudentT__E77210405884EA7B");
 
             entity.HasOne(d => d.Student).WithMany(p => p.StudentToTeachers)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -70,14 +70,14 @@ public partial class NoaDBcontext : DbContext
 
         modelBuilder.Entity<Subject>(entity =>
         {
-            entity.HasKey(e => e.SubjectId).HasName("PK__Subjects__AC1BA388B16FB30C");
+            entity.HasKey(e => e.SubjectId).HasName("PK__Subjects__AC1BA388D3406D6F");
 
             entity.Property(e => e.SubjectId).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<Teacher>(entity =>
         {
-            entity.HasKey(e => e.TeacherId).HasName("PK__Teachers__EDF259442242EA3D");
+            entity.HasKey(e => e.TeacherId).HasName("PK__Teachers__EDF259443A6ECC3B");
 
             entity.Property(e => e.TeacherId).ValueGeneratedNever();
 
@@ -86,14 +86,14 @@ public partial class NoaDBcontext : DbContext
 
         modelBuilder.Entity<TypeUser>(entity =>
         {
-            entity.HasKey(e => e.TypeId).HasName("PK__TypeUser__516F03951FA2A78F");
+            entity.HasKey(e => e.TypeId).HasName("PK__TypeUser__516F03957F5B7B84");
 
             entity.Property(e => e.TypeId).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC0704015C95");
+            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC0722167DA7");
 
             entity.HasOne(d => d.Type).WithMany(p => p.Users).HasConstraintName("FK__Users__TypeID__267ABA7A");
         });

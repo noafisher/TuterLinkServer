@@ -2,10 +2,11 @@
 {
     public class UserDTO
     {
+        public int Id { get; set; }
         public string Email { get; set; }
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
-        public string? Pass { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Pass { get; set; }
         public int? TypeId { get; set; }
 
         public UserDTO() {}
@@ -17,6 +18,7 @@
             this.LastName = modelUser.LastName;
             this.Pass = modelUser.Pass;
             this.TypeId = modelUser.TypeId;
+            this.Id = modelUser.Id;
         }
 
 

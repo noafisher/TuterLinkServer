@@ -4,7 +4,7 @@ using TutorLinkServer.Models;
 
 namespace TutorLinkServer.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class TutorLinkApiController : ControllerBase
     {
@@ -52,6 +52,34 @@ namespace TutorLinkServer.Controllers
 
         }
 
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] DTO.LoginInfoDTO loginDto)
+        {
+            try
+            {
+                HttpContext.Session.Clear(); //Logout any previous login attempt
+
+                //Get model user class from DB with matching email. 
+                Models.User? modelsUser = context.Users.Where(u => u.Email == loginDto.Email).FirstOrDefault();
+
+                //Check if user exist for this email and if password match, if not return Access Denied (Error 403) 
+                if (modelsUser == null || modelsUser.Pass != loginDto.Password)
+                {
+                    return Unauthorized();
+                }
+
+                //Login suceed! now mark login in session memory!
+                HttpContext.Session.SetString("loggedInUser", modelsUser.Email);
+
+                DTO.UserDTO dtoUser = new DTO.UserDTO(modelsUser);
+                return Ok(dtoUser);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
     }
 
     

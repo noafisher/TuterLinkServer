@@ -1,6 +1,6 @@
 ﻿Use master
 Go
-IF EXISTS (SELECT * FROM sys.databases WHERE name = N'TuterLink_DB')
+IF EXISTS (SELECT * FROM sys.databases WHERE name = N'TutorLink_DB')
 BEGIN
     DROP DATABASE TutorLink_DB;
 END
@@ -16,18 +16,25 @@ CREATE TABLE TypeUser(
     TypeName nvarchar(50)
     )
 
+    insert into TypeUser (TypeName, TypeID) VALUES (N'מורה', 0)
+    insert into TypeUser (TypeName, TypeID) VALUES (N'תלמיד', 1)
+    Go
+
 --יצירת טבלת משתמשים
 CREATE TABLE Users(
     Id int PRIMARY KEY IDENTITY(1,1),
-    Email nvarchar(100),
-    Pass nvarchar(25),
-    FirstName nvarchar(50),
-    LastName nvarchar(50),
+    Email nvarchar(100) not null,
+    Pass nvarchar(25) not null,
+    FirstName nvarchar(50) not null,
+    LastName nvarchar(50) not null,
     IsAdmin BIT,
     TypeID int,
     FOREIGN KEY(TypeID) REFERENCES TypeUser(TypeID)
     )
 
+    INSERT INTO Users (Email, Pass, FirstName, LastName, IsAdmin, TypeID)
+    VALUES ('ofer@ofer.com', '1234', 'ofer', 'zadikario', 1, 0)
+    Go
 -- תלמידים
 CREATE TABLE Students(
     StudentID int PRIMARY KEY,

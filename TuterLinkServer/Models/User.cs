@@ -12,16 +12,16 @@ public partial class User
     public int Id { get; set; }
 
     [StringLength(100)]
-    public string? Email { get; set; }
+    public string Email { get; set; } = null!;
 
     [StringLength(25)]
-    public string? Pass { get; set; }
+    public string Pass { get; set; } = null!;
 
     [StringLength(50)]
-    public string? FirstName { get; set; }
+    public string FirstName { get; set; } = null!;
 
     [StringLength(50)]
-    public string? LastName { get; set; }
+    public string LastName { get; set; } = null!;
 
     public bool? IsAdmin { get; set; }
 
