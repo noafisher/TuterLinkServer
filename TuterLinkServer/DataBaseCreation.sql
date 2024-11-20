@@ -73,7 +73,6 @@ CREATE TABLE City (
 CREATE LOGIN [TaskAdminLogin] WITH PASSWORD = 'NoaF1197';
 Go
 
--- Create a user in the TamiDB database for the login
 CREATE USER [TaskAdminUser] FOR LOGIN [TaskAdminLogin];
 Go
 
