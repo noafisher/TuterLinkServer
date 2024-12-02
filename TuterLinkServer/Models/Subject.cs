@@ -13,8 +13,8 @@ public partial class Subject
     public int SubjectId { get; set; }
 
     [StringLength(25)]
-    public string? SubjectName { get; set; }
+    public string SubjectName { get; set; } = null!;
 
     [InverseProperty("Subject")]
-    public virtual ICollection<StudentToTeacher> StudentToTeachers { get; set; } = new List<StudentToTeacher>();
+    public virtual ICollection<TeachersSubject> TeachersSubjects { get; set; } = new List<TeachersSubject>();
 }

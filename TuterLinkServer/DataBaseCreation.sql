@@ -10,64 +10,88 @@ Go
 Use TutorLink_DB
 Go
 
---סוג משתמשים
-CREATE TABLE TypeUser(
-    TypeID int PRIMARY KEY,
-    TypeName nvarchar(50)
-    )
-
-    insert into TypeUser (TypeName, TypeID) VALUES (N'מורה', 0)
-    insert into TypeUser (TypeName, TypeID) VALUES (N'תלמיד', 1)
-    Go
-
---יצירת טבלת משתמשים
-CREATE TABLE Users(
-    Id int PRIMARY KEY IDENTITY(1,1),
+--Teachers
+CREATE TABLE Teachers(
+    TeacherId int PRIMARY KEY IDENTITY(1,1),
     Email nvarchar(100) not null,
     Pass nvarchar(25) not null,
     FirstName nvarchar(50) not null,
     LastName nvarchar(50) not null,
-    IsAdmin BIT,
-    TypeID int,
-    FOREIGN KEY(TypeID) REFERENCES TypeUser(TypeID)
+    IsAdmin BIT default(0),
+    UserAddress nvarchar (100) not null,
+    MaxDistance float not null,
+    GoToStudent bit,
+    TeachAtHome bit,
+    Vetek int not null, 
+    PricePerHour int not null
     )
 
-    INSERT INTO Users (Email, Pass, FirstName, LastName, IsAdmin, TypeID)
-    VALUES ('ofer@ofer.com', '1234', 'ofer', 'zadikario', 1, 0)
-    Go
--- תלמידים
+    
+-- Students
 CREATE TABLE Students(
-    StudentID int PRIMARY KEY,
-    UserId int,
-     FOREIGN KEY(UserId) REFERENCES Users(Id),
-    
+    StudentID int PRIMARY KEY IDENTITY(1,1),
+    Email nvarchar(100) not null,
+    Pass nvarchar(25) not null,
+    FirstName nvarchar(50) not null,
+    LastName nvarchar(50) not null,
+    IsAdmin BIT default(0),
+    UserAddress nvarchar (100) not null,
+    CurrentClass int not null
     )
 
-CREATE TABLE Teachers(
-    TeacherID int PRIMARY KEY,
-    UserId int,
-     FOREIGN KEY(UserId) REFERENCES Users(Id),
+
     
-    )
+--Subjects    
 CREATE TABLE Subjects (
-    SubjectID int PRIMARY KEY,
-    SubjectName nvarchar(25)
+    SubjectID int PRIMARY KEY IDENTITY(1,1),
+    SubjectName nvarchar(25) not null
     )
 
-CREATE TABLE StudentToTeachers(
-    StudentID int
-       FOREIGN KEY(StudentID) REFERENCES Students(StudentID),
-    TeacherID int
+--Teachers and Subjects
+CREATE TABLE TeachersSubject(
+    TeacherID int not null
        FOREIGN KEY(TeacherID) REFERENCES Teachers(TeacherID),
-    SubjectID int
+    SubjectID int not null
         FOREIGN KEY(SubjectID) REFERENCES Subjects(SubjectID),
-    PRIMARY KEY(TeacherID, StudentID, SubjectId)
+    ID int primary key IDENTITY(1,1), 
+    MinClass int not null,
+    MaxClass int not null
     )
 
-CREATE TABLE City (
-    CityID int PRIMARY KEY,
-    CityName nvarchar(25)
-    )
+--Reviews
+CREATE TABLE TeacherReview(
+ReviewID int primary key IDENTITY(1,1),
+ TeacherID int not null
+       FOREIGN KEY(TeacherID) REFERENCES Teachers(TeacherID),
+ StudentID int not null
+        FOREIGN KEY(StudentID) REFERENCES Students(StudentID),
+TimeOfReview datetime not null,
+ReviewText nvarchar(400) not null,
+Score int not null
+)
+
+--Messages 
+Create Table ChatMessages(
+MessageID int primary key IDENTITY(1,1),
+ TeacherID int not null
+       FOREIGN KEY(TeacherID) REFERENCES Teachers(TeacherID),
+ StudentID int not null
+        FOREIGN KEY(StudentID) REFERENCES Students(StudentID),
+IsTeacherSender Bit not null,
+MessageText nvarchar(500),
+TextTime datetime not null
+)
+
+
+INSERT INTO Subjects (SubjectName) VALUES ('Math')
+INSERT INTO Subjects (SubjectName) VALUES ('Computer Science')
+
+INSERT INTO Teachers (Email, Pass, LastName, FirstName, IsAdmin, UserAddress, GoToStudent, TeachAtHome, Vetek, PricePerHour, MaxDistance)
+VALUES ('ofer@ofer.com', '1234', 'Zadikario', 'Ofer', 0, 'Hashachar, 57, Raanana', 0, 1, 3, 100, 0)
+
+INSERT INTO Students(Email, Pass, LastName, FirstName, IsAdmin, UserAddress, CurrentClass)
+VALUES ('kuku@ofer.com', '1234', 'Kuku', 'Kuku', 0, 'Hashachar, 57, Hod Hasharon', 12)
+
 
 -- Create a login for the admin user
 CREATE LOGIN [TaskAdminLogin] WITH PASSWORD = 'NoaF1197';

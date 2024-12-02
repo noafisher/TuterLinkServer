@@ -15,19 +15,17 @@ public partial class NoaDBcontext : DbContext
     {
     }
 
-    public virtual DbSet<City> Cities { get; set; }
+    public virtual DbSet<ChatMessage> ChatMessages { get; set; }
 
     public virtual DbSet<Student> Students { get; set; }
-
-    public virtual DbSet<StudentToTeacher> StudentToTeachers { get; set; }
 
     public virtual DbSet<Subject> Subjects { get; set; }
 
     public virtual DbSet<Teacher> Teachers { get; set; }
 
-    public virtual DbSet<TypeUser> TypeUsers { get; set; }
+    public virtual DbSet<TeacherReview> TeacherReviews { get; set; }
 
-    public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<TeachersSubject> TeachersSubjects { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -35,67 +33,62 @@ public partial class NoaDBcontext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<City>(entity =>
+        modelBuilder.Entity<ChatMessage>(entity =>
         {
-            entity.HasKey(e => e.CityId).HasName("PK__City__F2D21A961E7A0420");
+            entity.HasKey(e => e.MessageId).HasName("PK__ChatMess__C87C037CB20A0500");
 
-            entity.Property(e => e.CityId).ValueGeneratedNever();
+            entity.HasOne(d => d.Student).WithMany(p => p.ChatMessages)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__ChatMessa__Stude__34C8D9D1");
+
+            entity.HasOne(d => d.Teacher).WithMany(p => p.ChatMessages)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__ChatMessa__Teach__33D4B598");
         });
 
         modelBuilder.Entity<Student>(entity =>
         {
-            entity.HasKey(e => e.StudentId).HasName("PK__Students__32C52A793507C5A1");
+            entity.HasKey(e => e.StudentId).HasName("PK__Students__32C52A79D27B7663");
 
-            entity.Property(e => e.StudentId).ValueGeneratedNever();
-
-            entity.HasOne(d => d.User).WithMany(p => p.Students).HasConstraintName("FK__Students__UserId__29572725");
-        });
-
-        modelBuilder.Entity<StudentToTeacher>(entity =>
-        {
-            entity.HasKey(e => new { e.TeacherId, e.StudentId, e.SubjectId }).HasName("PK__StudentT__E77210405884EA7B");
-
-            entity.HasOne(d => d.Student).WithMany(p => p.StudentToTeachers)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__StudentTo__Stude__30F848ED");
-
-            entity.HasOne(d => d.Subject).WithMany(p => p.StudentToTeachers)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__StudentTo__Subje__32E0915F");
-
-            entity.HasOne(d => d.Teacher).WithMany(p => p.StudentToTeachers)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__StudentTo__Teach__31EC6D26");
+            entity.Property(e => e.IsAdmin).HasDefaultValue(false);
         });
 
         modelBuilder.Entity<Subject>(entity =>
         {
-            entity.HasKey(e => e.SubjectId).HasName("PK__Subjects__AC1BA388D3406D6F");
-
-            entity.Property(e => e.SubjectId).ValueGeneratedNever();
+            entity.HasKey(e => e.SubjectId).HasName("PK__Subjects__AC1BA3881DA73692");
         });
 
         modelBuilder.Entity<Teacher>(entity =>
         {
-            entity.HasKey(e => e.TeacherId).HasName("PK__Teachers__EDF259443A6ECC3B");
+            entity.HasKey(e => e.TeacherId).HasName("PK__Teachers__EDF259645B5FAB3E");
 
-            entity.Property(e => e.TeacherId).ValueGeneratedNever();
-
-            entity.HasOne(d => d.User).WithMany(p => p.Teachers).HasConstraintName("FK__Teachers__UserId__2C3393D0");
+            entity.Property(e => e.IsAdmin).HasDefaultValue(false);
         });
 
-        modelBuilder.Entity<TypeUser>(entity =>
+        modelBuilder.Entity<TeacherReview>(entity =>
         {
-            entity.HasKey(e => e.TypeId).HasName("PK__TypeUser__516F03957F5B7B84");
+            entity.HasKey(e => e.ReviewId).HasName("PK__TeacherR__74BC79AE725BEE19");
 
-            entity.Property(e => e.TypeId).ValueGeneratedNever();
+            entity.HasOne(d => d.Student).WithMany(p => p.TeacherReviews)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__TeacherRe__Stude__30F848ED");
+
+            entity.HasOne(d => d.Teacher).WithMany(p => p.TeacherReviews)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__TeacherRe__Teach__300424B4");
         });
 
-        modelBuilder.Entity<User>(entity =>
+        modelBuilder.Entity<TeachersSubject>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC0722167DA7");
+            entity.HasKey(e => e.Id).HasName("PK__Teachers__3214EC2775D8E1D9");
 
-            entity.HasOne(d => d.Type).WithMany(p => p.Users).HasConstraintName("FK__Users__TypeID__267ABA7A");
+            entity.HasOne(d => d.Subject).WithMany(p => p.TeachersSubjects)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__TeachersS__Subje__2D27B809");
+
+            entity.HasOne(d => d.Teacher).WithMany(p => p.TeachersSubjects)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__TeachersS__Teach__2C3393D0");
         });
 
         OnModelCreatingPartial(modelBuilder);
