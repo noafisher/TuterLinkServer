@@ -10,6 +10,36 @@
         public int CurrentClass {  get; set; }
         public string UserAddress { get; set; }
 
+        public StudentDTO() { }
+
+        public StudentDTO(Models.Student student) 
+        {
+            
+            this.StudentId = student.StudentId;
+            this.Email = student.Email;
+            this.FirstName = student.FirstName;
+            this.LastName = student.LastName;
+            this.Pass = student.Pass;
+            this.CurrentClass = student.CurrentClass;
+            this.UserAddress = student.UserAddress;
+
+        }
+
+        public Models.Student GetModels()
+        {
+            Models.Student modelsStudent = new Models.Student()
+            {
+                StudentId = this.StudentId,
+                Email = this.Email,
+                FirstName = this.FirstName,
+                LastName = this.LastName,
+                Pass = this.Pass,
+                UserAddress = this.UserAddress,
+                
+            };
+
+            return modelsStudent;
+        }
 
     }
 }

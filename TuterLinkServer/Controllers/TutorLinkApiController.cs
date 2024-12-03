@@ -19,67 +19,117 @@ namespace TutorLinkServer.Controllers
             this.webHostEnvironment = env;
         }
 
-        //[HttpPost("register")]
-        //public IActionResult Register([FromBody] DTO.UserDTO userDto)
-        //{
-        //    try
-        //    {
-        //        HttpContext.Session.Clear(); //Logout any previous login attempt
+        [HttpPost("registerTeacher")]
+        public IActionResult RegisterTeacher([FromBody] DTO.TeacherDTO teacherDTO)
+        {
+            try
+            {
+                HttpContext.Session.Clear(); //Logout any previous login attempt
 
-        //        //Get model user class from DB with matching email. 
-        //        Models.User modelsUser = new User()
-        //        {
-        //            FirstName = userDto.FirstName,
-        //            LastName = userDto.LastName,
-        //            Email = userDto.Email,
-        //            Pass = userDto.Pass,
-        //            TypeId = userDto.TypeId
-        //        };
+                //Get model user class from DB with matching email. 
+                Models.Teacher modelsTeacher = teacherDTO.GetModels();
+                
 
-        //        context.Users.Add(modelsUser);
-        //        context.SaveChanges();
+                context.Teachers.Add(modelsTeacher);
+                context.SaveChanges();
 
-        //        //User was added!
-        //        DTO.UserDTO dtoUser = new DTO.UserDTO(modelsUser);
-        //        //dtoUser.ProfileImagePath = GetProfileImageVirtualPath(dtoUser.Id);
-        //        return Ok(dtoUser);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //        //
-        //    }
+                //User was added!
+                DTO.TeacherDTO dtoUser = new DTO.TeacherDTO(modelsTeacher);
+                //dtoUser.ProfileImagePath = GetProfileImageVirtualPath(dtoUser.Id);
+                return Ok(dtoUser);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                
+            }
 
-        //}
+        }
 
-        //[HttpPost("login")]
-        //public IActionResult Login([FromBody] DTO.LoginInfoDTO loginDto)
-        //{
-        //    try
-        //    {
-        //        HttpContext.Session.Clear(); //Logout any previous login attempt
+        [HttpPost("registerStudent")]
+        public IActionResult RegisterStudent([FromBody] DTO.StudentDTO studentDTO)
+        {
+            try
+            {
+                HttpContext.Session.Clear(); //Logout any previous login attempt
 
-        //        //Get model user class from DB with matching email. 
-        //        Models.User? modelsUser = context.Users.Where(u => u.Email == loginDto.Email).FirstOrDefault();
+                //Get model user class from DB with matching email. 
+                Models.Student modelsStudent = studentDTO.GetModels();
 
-        //        //Check if user exist for this email and if password match, if not return Access Denied (Error 403) 
-        //        if (modelsUser == null || modelsUser.Pass != loginDto.Password)
-        //        {
-        //            return Unauthorized();
-        //        }
 
-        //        //Login suceed! now mark login in session memory!
-        //        HttpContext.Session.SetString("loggedInUser", modelsUser.Email);
+                context.Students.Add(modelsStudent);
+                context.SaveChanges();
 
-        //        DTO.UserDTO dtoUser = new DTO.UserDTO(modelsUser);
-        //        return Ok(dtoUser);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
+                //User was added!
+                DTO.StudentDTO dtoUser = new DTO.StudentDTO(modelsStudent);
+                //dtoUser.ProfileImagePath = GetProfileImageVirtualPath(dtoUser.Id);
+                return Ok(dtoUser);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
 
-        //}
+            }
+
+        }
+
+        [HttpPost("loginTeacher")]
+        public IActionResult LoginTeacher([FromBody] DTO.LoginInfoDTO loginDto)
+        {
+            try
+            {
+                HttpContext.Session.Clear(); //Logout any previous login attempt
+
+                //Get model user class from DB with matching email. 
+                Models.Teacher modelsTeacher = context.Teachers.Where(u => u.Email == loginDto.Email).FirstOrDefault();
+
+                //Check if user exist for this email and if password match, if not return Access Denied (Error 403) 
+                if (modelsTeacher == null || modelsTeacher.Pass != loginDto.Password)
+                {
+                    return Unauthorized();
+                }
+
+                //Login suceed! now mark login in session memory!
+                HttpContext.Session.SetString("loggedInUser", modelsTeacher.Email);
+
+                DTO.TeacherDTO dtoTeacher = new DTO.TeacherDTO(modelsTeacher);
+                return Ok(dtoTeacher);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpPost("loginStudent")]
+        public IActionResult LoginStudent([FromBody] DTO.LoginInfoDTO loginDto)
+        {
+            try
+            {
+                HttpContext.Session.Clear(); //Logout any previous login attempt
+
+                //Get model user class from DB with matching email. 
+                Models.Student modelsStudent = context.Students.Where(u => u.Email == loginDto.Email).FirstOrDefault();
+
+                //Check if user exist for this email and if password match, if not return Access Denied (Error 403) 
+                if (modelsStudent == null || modelsStudent.Pass != loginDto.Password)
+                {
+                    return Unauthorized();
+                }
+
+                //Login suceed! now mark login in session memory!
+                HttpContext.Session.SetString("loggedInUser", modelsStudent.Email);
+
+                DTO.StudentDTO dtoStudent = new DTO.StudentDTO(modelsStudent);
+                return Ok(dtoStudent);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
     }
 
     
