@@ -34,9 +34,9 @@ namespace TutorLinkServer.Controllers
                 context.SaveChanges();
 
                 //User was added!
-                DTO.TeacherDTO dtoUser = new DTO.TeacherDTO(modelsTeacher);
+                DTO.TeacherDTO dtoTeacher = new DTO.TeacherDTO(modelsTeacher);
                 //dtoUser.ProfileImagePath = GetProfileImageVirtualPath(dtoUser.Id);
-                return Ok(dtoUser);
+                return Ok(dtoTeacher);
             }
             catch (Exception ex)
             {
@@ -61,9 +61,9 @@ namespace TutorLinkServer.Controllers
                 context.SaveChanges();
 
                 //User was added!
-                DTO.StudentDTO dtoUser = new DTO.StudentDTO(modelsStudent);
+                DTO.StudentDTO dtoStudent = new DTO.StudentDTO(modelsStudent);
                 //dtoUser.ProfileImagePath = GetProfileImageVirtualPath(dtoUser.Id);
-                return Ok(dtoUser);
+                return Ok(dtoStudent);
             }
             catch (Exception ex)
             {
@@ -81,7 +81,7 @@ namespace TutorLinkServer.Controllers
                 HttpContext.Session.Clear(); //Logout any previous login attempt
 
                 //Get model user class from DB with matching email. 
-                Models.Teacher modelsTeacher = context.Teachers.Where(u => u.Email == loginDto.Email).FirstOrDefault();
+                Models.Teacher? modelsTeacher = context.Teachers.Where(u => u.Email == loginDto.Email).FirstOrDefault();
 
                 //Check if user exist for this email and if password match, if not return Access Denied (Error 403) 
                 if (modelsTeacher == null || modelsTeacher.Pass != loginDto.Password)
@@ -110,7 +110,7 @@ namespace TutorLinkServer.Controllers
                 HttpContext.Session.Clear(); //Logout any previous login attempt
 
                 //Get model user class from DB with matching email. 
-                Models.Student modelsStudent = context.Students.Where(u => u.Email == loginDto.Email).FirstOrDefault();
+                Models.Student? modelsStudent = context.Students.Where(u => u.Email == loginDto.Email).FirstOrDefault();
 
                 //Check if user exist for this email and if password match, if not return Access Denied (Error 403) 
                 if (modelsStudent == null || modelsStudent.Pass != loginDto.Password)
