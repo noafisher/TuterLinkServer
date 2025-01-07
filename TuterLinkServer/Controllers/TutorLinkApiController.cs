@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using TutorLinkServer.DTO;
 using TutorLinkServer.Models;
 
 namespace TutorLinkServer.Controllers
@@ -130,8 +132,33 @@ namespace TutorLinkServer.Controllers
             }
 
         }
+
+
+        #region Teachers list page 
+        //get all teachers
+        [HttpGet("GetAllTeachers")]
+        public IActionResult GetAllTeachers()
+        {
+            try
+            {
+                List<Teacher> listTeachers = context.GetAllTeachers();
+                List<TeacherDTO> l = new List<TeacherDTO>();
+                foreach(Teacher t in listTeachers)
+                {
+                    l.Add(new TeacherDTO(t));
+                }
+                return Ok(l);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        #endregion
     }
 
-    
+
 
 }

@@ -24,7 +24,7 @@ CREATE TABLE Teachers(
     TeachAtHome bit,
     Vetek int not null, 
     PricePerHour int not null
-    )
+        )
 
     
 -- Students
@@ -92,6 +92,10 @@ VALUES ('ofer@ofer.com', '1234', 'Zadikario', 'Ofer', 0, 'Hashachar, 57, Raanana
 INSERT INTO Students(Email, Pass, LastName, FirstName, IsAdmin, UserAddress, CurrentClass)
 VALUES ('kuku@ofer.com', '1234', 'Kuku', 'Kuku', 0, 'Hashachar, 57, Hod Hasharon', 12)
 
+select * from Subjects
+select * from TeachersSubject
+select * from Teachers
+insert into TeachersSubject(TeacherID, SubjectID, MinClass, MaxClass) VALUES (1, 2, 10,12)
 
 -- Create a login for the admin user
 CREATE LOGIN [TaskAdminLogin] WITH PASSWORD = 'NoaF1197';

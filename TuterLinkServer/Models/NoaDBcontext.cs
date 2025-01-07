@@ -95,4 +95,16 @@ public partial class NoaDBcontext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+    public List<Teacher>? GetAllTeachers()
+    {
+        return this.Teachers.Include(t => t.TeachersSubjects).ThenInclude(s => s.Subject).ToList();
+
+    }
+
+    public List<Subject>? GetAllSubjects()
+    {
+        return this.Subjects.ToList();
+
+    }
 }

@@ -13,6 +13,7 @@
         public bool TeachAtHome { get; set; }
         public int Vetek {  get; set; }
         public int PricePerHour { get; set; }
+        public List<TeacherSubjectDTO> TeacherSubjects { get; set; }
 
         public TeacherDTO() { } 
 
@@ -27,6 +28,14 @@
             this.MaxDistance = teacher.MaxDistance;
             this.Vetek = teacher.Vetek;
             this.PricePerHour = teacher.PricePerHour;
+            if (teacher.TeachersSubjects != null)
+            {
+                this.TeacherSubjects = new List<TeacherSubjectDTO>();
+                foreach(Models.TeachersSubject s in teacher.TeachersSubjects)
+                {
+                    this.TeacherSubjects.Add(new TeacherSubjectDTO(s));
+                }
+            }
 
         }
 
