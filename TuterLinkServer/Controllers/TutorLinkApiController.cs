@@ -156,6 +156,27 @@ namespace TutorLinkServer.Controllers
 
         }
 
+        //get all subjects
+        [HttpGet("GetAllSubjects")]
+        public IActionResult GetAllSubjects()
+        {
+            try
+            {
+                List<Subject> listSubjects = context.GetAllSubjects();
+                List<SubjectDTO> l = new List<SubjectDTO>();
+                foreach (Subject s in listSubjects)
+                {
+                    l.Add(new SubjectDTO(s));
+                }
+                return Ok(l);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
         #endregion
     }
 
