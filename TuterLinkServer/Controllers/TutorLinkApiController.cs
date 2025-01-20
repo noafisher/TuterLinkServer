@@ -178,7 +178,40 @@ namespace TutorLinkServer.Controllers
         }
 
         #endregion
+
+        #region Rate Teacher page
+
+        // post a review 
+        [HttpPost("RateTeacher")]
+        public IActionResult RateTeacher([FromBody] DTO.ReviewDTO reviewDTO)
+        {
+            try
+            {
+                HttpContext.Session.Clear(); //Logout any previous login attempt
+
+                //Get model user class from DB with matching email. 
+                Models.TeacherReview reviewModel = reviewDTO.GetModels();
+
+
+                context.TeacherReviews.Add(reviewModel);
+                context.SaveChanges();
+
+                //Review was added!
+                DTO.ReviewDTO dtoReviow = new DTO.ReviewDTO(reviewModel);
+                //dtoUser.ProfileImagePath = GetProfileImageVirtualPath(dtoUser.Id);
+                return Ok(dtoReviow);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
+
+
+        #endregion
     }
+
 
 
 
