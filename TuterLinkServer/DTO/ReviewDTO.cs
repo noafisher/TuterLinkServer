@@ -7,6 +7,7 @@
         public int StudentId { get; set; }
         public DateTime TimeOfReview { get; set; }
         public string ReviewText { get; set; }
+        public int Score { get; set; }
 
         public ReviewDTO(Models.TeacherReview ts)
         {
@@ -16,7 +17,10 @@
             this.StudentId = ts.StudentId;
             this.TimeOfReview = ts.TimeOfReview;
             this.ReviewText = ts.ReviewText;
+            this.Score = ts.Score;
         }
+
+        public ReviewDTO() { }
 
         public Models.TeacherReview GetModels()
         {
@@ -27,7 +31,8 @@
                 TeacherId = this.TeacherId,
                 StudentId = this.StudentId,
                 TimeOfReview = this.TimeOfReview,
-                ReviewText = this.ReviewText
+                ReviewText = this.ReviewText,
+                Score= this.Score
             };
 
             return teacherReviewModel;
