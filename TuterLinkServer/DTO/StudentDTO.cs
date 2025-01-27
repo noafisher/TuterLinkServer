@@ -9,6 +9,7 @@
         public string Pass {  get; set; }   
         public int CurrentClass {  get; set; }
         public string UserAddress { get; set; }
+        public string ProfileImagePath { get; set; }
 
         public StudentDTO() { }
 

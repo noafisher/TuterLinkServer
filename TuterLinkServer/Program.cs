@@ -41,6 +41,7 @@ namespace TutorLinkServer
                 app.UseSwaggerUI();
             }
 
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();

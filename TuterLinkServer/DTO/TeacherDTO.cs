@@ -13,6 +13,7 @@
         public bool TeachAtHome { get; set; }
         public int Vetek {  get; set; }
         public int PricePerHour { get; set; }
+        public string ProfileImagePath { get; set; }
         public List<TeacherSubjectDTO> TeacherSubjects { get; set; }
 
         public TeacherDTO() { } 
