@@ -82,6 +82,16 @@ MessageText nvarchar(500),
 TextTime datetime not null
 )
 
+--Reports
+Create Table Reports(
+ReportID int primary key IDENTITY(1,1),
+TeacherID int not null
+       FOREIGN KEY(TeacherID) REFERENCES Teachers(TeacherID),
+StudentID int not null
+        FOREIGN KEY(StudentID) REFERENCES Students(StudentID),
+ReportedByStudent BIT not null,
+ReportText nvarchar(500),
+)
 
 INSERT INTO Subjects (SubjectName) VALUES ('Math')
 INSERT INTO Subjects (SubjectName) VALUES ('Computer Science')

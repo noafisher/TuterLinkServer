@@ -144,7 +144,7 @@ namespace TutorLinkServer.Controllers
         {
             try
             {
-                List<Teacher> listTeachers = context.GetAllTeachers();
+                List<Teacher> listTeachers = context.Teachers.ToList(); ;
                 List<TeacherDTO> l = new List<TeacherDTO>();
                 foreach(Teacher t in listTeachers)
                 {
@@ -165,7 +165,7 @@ namespace TutorLinkServer.Controllers
         {
             try
             {
-                List<Subject> listSubjects = context.GetAllSubjects();
+                List<Subject> listSubjects = context.Subjects.ToList(); ;
                 List<SubjectDTO> l = new List<SubjectDTO>();
                 foreach (Subject s in listSubjects)
                 {
@@ -368,6 +368,35 @@ namespace TutorLinkServer.Controllers
 
             return virtualPath;
         }
+        #endregion
+
+        #region Report 
+        [HttpPost("ReportUser")]
+        public IActionResult ReportUser([FromBody] DTO.ReportDTO reportDTO)
+        {
+            try
+            {
+                HttpContext.Session.Clear(); //Logout any previous login attempt
+
+                //Get model user class from DB with matching email. 
+                Models.Report reportModel = reportDTO.GetModels();
+
+
+                context.Reports.Add(reportModel);
+                context.SaveChanges();
+
+                //Review was added!
+                DTO.ReportDTO dtoReport = new DTO.ReportDTO(reportModel);
+                //dtoUser.ProfileImagePath = GetProfileImageVirtualPath(dtoUser.Id);
+                return Ok(dtoReport);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
+
         #endregion
     }
 

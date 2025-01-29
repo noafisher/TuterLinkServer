@@ -17,6 +17,8 @@ public partial class NoaDBcontext : DbContext
 
     public virtual DbSet<ChatMessage> ChatMessages { get; set; }
 
+    public virtual DbSet<Report> Reports { get; set; }
+
     public virtual DbSet<Student> Students { get; set; }
 
     public virtual DbSet<Subject> Subjects { get; set; }
@@ -35,7 +37,7 @@ public partial class NoaDBcontext : DbContext
     {
         modelBuilder.Entity<ChatMessage>(entity =>
         {
-            entity.HasKey(e => e.MessageId).HasName("PK__ChatMess__C87C037CB20A0500");
+            entity.HasKey(e => e.MessageId).HasName("PK__ChatMess__C87C037CCBA842BA");
 
             entity.HasOne(d => d.Student).WithMany(p => p.ChatMessages)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -46,28 +48,41 @@ public partial class NoaDBcontext : DbContext
                 .HasConstraintName("FK__ChatMessa__Teach__33D4B598");
         });
 
+        modelBuilder.Entity<Report>(entity =>
+        {
+            entity.HasKey(e => e.ReportId).HasName("PK__Reports__D5BD48E5907BC737");
+
+            entity.HasOne(d => d.Student).WithMany(p => p.Reports)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Reports__Student__38996AB5");
+
+            entity.HasOne(d => d.Teacher).WithMany(p => p.Reports)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Reports__Teacher__37A5467C");
+        });
+
         modelBuilder.Entity<Student>(entity =>
         {
-            entity.HasKey(e => e.StudentId).HasName("PK__Students__32C52A79D27B7663");
+            entity.HasKey(e => e.StudentId).HasName("PK__Students__32C52A7945ECDD40");
 
             entity.Property(e => e.IsAdmin).HasDefaultValue(false);
         });
 
         modelBuilder.Entity<Subject>(entity =>
         {
-            entity.HasKey(e => e.SubjectId).HasName("PK__Subjects__AC1BA3881DA73692");
+            entity.HasKey(e => e.SubjectId).HasName("PK__Subjects__AC1BA3882D4DDBEE");
         });
 
         modelBuilder.Entity<Teacher>(entity =>
         {
-            entity.HasKey(e => e.TeacherId).HasName("PK__Teachers__EDF259645B5FAB3E");
+            entity.HasKey(e => e.TeacherId).HasName("PK__Teachers__EDF259643E81F09C");
 
             entity.Property(e => e.IsAdmin).HasDefaultValue(false);
         });
 
         modelBuilder.Entity<TeacherReview>(entity =>
         {
-            entity.HasKey(e => e.ReviewId).HasName("PK__TeacherR__74BC79AE725BEE19");
+            entity.HasKey(e => e.ReviewId).HasName("PK__TeacherR__74BC79AE2CFD4407");
 
             entity.HasOne(d => d.Student).WithMany(p => p.TeacherReviews)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -80,7 +95,7 @@ public partial class NoaDBcontext : DbContext
 
         modelBuilder.Entity<TeachersSubject>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Teachers__3214EC2775D8E1D9");
+            entity.HasKey(e => e.Id).HasName("PK__Teachers__3214EC27A4AA045A");
 
             entity.HasOne(d => d.Subject).WithMany(p => p.TeachersSubjects)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -95,16 +110,4 @@ public partial class NoaDBcontext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
-    public List<Teacher>? GetAllTeachers()
-    {
-        return this.Teachers.Include(t => t.TeachersSubjects).ThenInclude(s => s.Subject).ToList();
-
-    }
-
-    public List<Subject>? GetAllSubjects()
-    {
-        return this.Subjects.ToList();
-
-    }
 }
