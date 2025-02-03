@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TutorLinkServer.Hubs;
 using TutorLinkServer.Models;
 namespace TutorLinkServer
 {
@@ -47,8 +48,9 @@ namespace TutorLinkServer
             app.UseAuthorization();
 
             app.MapControllers();
-
+            app.MapHub<ChatHub>("/chatHub"); //Map the chatHub to the /chatHub URL
             app.Run();
+     
         }
     }
 }
