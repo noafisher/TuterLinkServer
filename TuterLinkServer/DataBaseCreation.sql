@@ -118,7 +118,13 @@ Go
 ALTER ROLE db_owner ADD MEMBER [TaskAdminUser];
 Go
 
-    
+--iinsert a fake message
+INSERT INTO ChatMessages VALUES (1,1,1,'this is a fake message', GETDATE())
+Go
+INSERT INTO ChatMessages VALUES (1,1,0,'this is a fake message2', GETDATE())
+Go
+
+select * from ChatMessages
 --scaffold-DbContext "Server = (localdb)\MSSQLLocalDB;Initial Catalog=TutorLink_DB;User ID=TaskAdminLogin;Password=NoaF1197;" Microsoft.EntityFrameworkCore.SqlServer -OutPutDir Models -Context NoaDBcontext -DataAnnotations -force
 
 

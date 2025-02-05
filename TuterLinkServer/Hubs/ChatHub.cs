@@ -49,7 +49,7 @@ namespace TutorLinkServer.Hubs
                 {
                     foreach (KeyValuePair<string, string> connection in connections)
                     {
-                        await Clients.Client(connection.Key).SendAsync("ReceiveMessageFromStudent", sDto,  message);
+                        await Clients.Client(connection.Key).SendAsync("ReceiveMessageFromStudent", sDto,  m);
                     }
                 }
             }
@@ -90,7 +90,7 @@ namespace TutorLinkServer.Hubs
                 {
                     foreach (KeyValuePair<string, string> connection in connections)
                     {
-                        await Clients.Client(connection.Key).SendAsync("ReceiveMessageFromTeacher", tDto, message);
+                        await Clients.Client(connection.Key).SendAsync("ReceiveMessageFromTeacher", tDto, m);
                     }
                 }
             }
@@ -126,6 +126,7 @@ namespace TutorLinkServer.Hubs
                         };
                     }
                     current.Messages.Add(new ChatMessageDTO(message));
+                    prev = message;
                 }
             }
             
@@ -160,6 +161,7 @@ namespace TutorLinkServer.Hubs
                         };
                     }
                     current.Messages.Add(new ChatMessageDTO(message));
+                    prev = message;
                 }
             }
 

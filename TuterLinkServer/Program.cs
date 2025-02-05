@@ -16,6 +16,8 @@ namespace TutorLinkServer
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            //Add the signalR service to the we application
+            builder.Services.AddSignalR();
 
             //Add Database to dependency injection
             builder.Services.AddDbContext<NoaDBcontext>(
