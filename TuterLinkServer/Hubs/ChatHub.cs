@@ -117,17 +117,17 @@ namespace TutorLinkServer.Hubs
                 {
                     if (prev == null || prev.TeacherId != message.TeacherId)
                     {
-                        if (current != null)
-                            output.Add(current);
                         current = new MessagesFromTeacher()
                         {
                             Teacher = new TeacherDTO(message.Teacher),
                             Messages = new List<ChatMessageDTO>()
                         };
+                        output.Add(current);
                     }
                     current.Messages.Add(new ChatMessageDTO(message));
                     prev = message;
                 }
+
             }
             
 
@@ -152,13 +152,12 @@ namespace TutorLinkServer.Hubs
                 {
                     if (prev == null || prev.StudentId != message.StudentId)
                     {
-                        if (current != null)
-                            output.Add(current);
                         current = new MessagesFromStudent()
                         {
                             Student = new StudentDTO(message.Student),
                             Messages = new List<ChatMessageDTO>()
                         };
+                        output.Add(current);
                     }
                     current.Messages.Add(new ChatMessageDTO(message));
                     prev = message;
