@@ -406,9 +406,9 @@ namespace TutorLinkServer.Controllers
             {
                 List<Student> listStudents = context.Students.ToList(); ;
                 List<StudentDTO> l = new List<StudentDTO>();
-                foreach (Student t in listStudents)
+                foreach (Student s in listStudents)
                 {
-                    l.Add(new StudentDTO(t));
+                    l.Add(new StudentDTO(s));
                 }
                 return Ok(l);
             }
