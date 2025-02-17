@@ -64,7 +64,7 @@ namespace TutorLinkServer.Controllers
 
                 //User was added!
                 DTO.StudentDTO dtoStudent = new DTO.StudentDTO(modelsStudent);
-                //dtoUser.ProfileImagePath = GetProfileImageVirtualPath(dtoUser.Id);
+                StudentDTO.ProfileImagePath = GetProfileImageVirtualPath(StudentDTO.StudentId);
                 return Ok(dtoStudent);
             }
             catch (Exception ex)
