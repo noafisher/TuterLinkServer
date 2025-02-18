@@ -42,6 +42,9 @@ public partial class Teacher
     public virtual ICollection<ChatMessage> ChatMessages { get; set; } = new List<ChatMessage>();
 
     [InverseProperty("Teacher")]
+    public virtual ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
+
+    [InverseProperty("Teacher")]
     public virtual ICollection<Report> Reports { get; set; } = new List<Report>();
 
     [InverseProperty("Teacher")]

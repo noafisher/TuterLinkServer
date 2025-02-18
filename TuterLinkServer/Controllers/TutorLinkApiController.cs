@@ -137,7 +137,6 @@ namespace TutorLinkServer.Controllers
         }
 
 
-        #region Teachers list page 
         //get all teachers
         [HttpGet("GetAllTeachers")]
         public IActionResult GetAllTeachers()
@@ -180,9 +179,6 @@ namespace TutorLinkServer.Controllers
 
         }
 
-        #endregion
-
-        #region Rate Teacher page
 
         // post a review 
         [HttpPost("RateTeacher")]
@@ -211,10 +207,6 @@ namespace TutorLinkServer.Controllers
             }
         }
 
-
-        #endregion
-
-        #region profile images
         [HttpPost("UploadProfileImage")]
         public async Task<IActionResult> UploadProfileImageAsync(IFormFile file)
         {
@@ -368,9 +360,7 @@ namespace TutorLinkServer.Controllers
 
             return virtualPath;
         }
-        #endregion
 
-        #region Report 
         [HttpPost("ReportUser")]
         public IActionResult ReportUser([FromBody] DTO.ReportDTO reportDTO)
         {
@@ -419,7 +409,28 @@ namespace TutorLinkServer.Controllers
 
         }
 
-        #endregion
+        //get all lessons from a specific date
+        [HttpGet("GetAllLessons")]
+        public IActionResult GetAllLessons(DateOnly dateOnly)
+        {
+            try
+            {
+                List<Lesson> listLessons = context.Lessons.ToList(); ;
+                List<LessonDTO> l = new List<LessonDTO>();
+                foreach (Lesson lesson in listLessons)
+                {
+                    if (lesson.TimeOfLesson.Day == dateOnly.Day && lesson.TimeOfLesson.Month == dateOnly.Month && lesson.TimeOfLesson.Year == dateOnly.Year)
+                    l.Add(new LessonDTO(lesson));
+                }
+                return Ok(l);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
     }
 
 

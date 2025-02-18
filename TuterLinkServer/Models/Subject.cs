@@ -16,5 +16,8 @@ public partial class Subject
     public string SubjectName { get; set; } = null!;
 
     [InverseProperty("Subject")]
+    public virtual ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
+
+    [InverseProperty("Subject")]
     public virtual ICollection<TeachersSubject> TeachersSubjects { get; set; } = new List<TeachersSubject>();
 }

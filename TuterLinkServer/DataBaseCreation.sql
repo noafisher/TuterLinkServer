@@ -93,6 +93,20 @@ ReportedByStudent BIT not null,
 ReportText nvarchar(500),
 )
 
+-- Lessons 
+Create Table Lessons(
+LessonID int primary key IDENTITY(1,1),
+TeacherID int not null
+       FOREIGN KEY(TeacherID) REFERENCES Teachers(TeacherID),
+StudentID int not null
+        FOREIGN KEY(StudentID) REFERENCES Students(StudentID),
+SubjectID int not null
+        FOREIGN KEY(SubjectID) REFERENCES Subjects(SubjectID),
+TimeOfLesson datetime not null,
+)
+
+
+
 INSERT INTO Subjects (SubjectName) VALUES ('Math')
 INSERT INTO Subjects (SubjectName) VALUES ('Computer Science')
 
@@ -101,6 +115,11 @@ VALUES ('ofer@ofer.com', '1234', 'Zadikario', 'Ofer', 0, 'Hashachar, 57, Raanana
 
 INSERT INTO Students(Email, Pass, LastName, FirstName, IsAdmin, UserAddress, CurrentClass)
 VALUES ('kuku@ofer.com', '1234', 'Kuku', 'Kuku', 0, 'Hashachar, 57, Hod Hasharon', 12)
+
+INSERT INTO Lessons (TeacherID, StudentID, SubjectID, TimeOfLesson)
+VALUES
+(1, 1, 2, GETDATE())
+
 
 select * from Subjects
 select * from TeachersSubject
