@@ -410,8 +410,8 @@ namespace TutorLinkServer.Controllers
         }
 
         //get all lessons from a specific date
-        [HttpGet("GetAllLessons")]
-        public IActionResult GetAllLessons(DateOnly dateOnly)
+        [HttpPost("GetAllLessons")]
+        public IActionResult GetAllLessons([FromBody] DateOnly dateOnly)
         {
             try
             {
