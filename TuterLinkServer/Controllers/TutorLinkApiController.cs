@@ -431,6 +431,33 @@ namespace TutorLinkServer.Controllers
         }
 
 
+        [HttpPost("AddLesson")]
+        public IActionResult AddLesson([FromBody] DTO.LessonDTO lessonDTO)
+        {
+            try
+            {
+                HttpContext.Session.Clear(); //Logout any previous login attempt
+
+                //Get model user class from DB with matching email. 
+                Models.Lesson lessonModel = lessonDTO.GetModels();
+
+
+                context.Lessons.Add(lessonModel);
+                context.SaveChanges();
+
+                //lesson was added!
+                DTO.LessonDTO dtoLesson = new DTO.LessonDTO(lessonModel);
+                //dtoUser.ProfileImagePath = GetProfileImageVirtualPath(dtoUser.Id);
+                return Ok(dtoLesson);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
+
+
     }
 
 
