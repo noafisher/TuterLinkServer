@@ -37,6 +37,7 @@ namespace TutorLinkServer.Hubs
                 };
                 dbContext.ChatMessages.Add(m);
                 dbContext.SaveChanges();
+                ChatMessageDTO mDto = new ChatMessageDTO(m);
 
                 //Read Student from DB
                 Student? s = dbContext.Students.Where(ss => ss.StudentId == sid).FirstOrDefault();
@@ -49,7 +50,7 @@ namespace TutorLinkServer.Hubs
                 {
                     foreach (KeyValuePair<string, string> connection in connections)
                     {
-                        await Clients.Client(connection.Key).SendAsync("ReceiveMessageFromStudent", sDto,  m);
+                        await Clients.Client(connection.Key).SendAsync("ReceiveMessageFromStudent", sDto,  mDto);
                     }
                 }
             }
@@ -78,7 +79,7 @@ namespace TutorLinkServer.Hubs
                 };
                 dbContext.ChatMessages.Add(m);
                 dbContext.SaveChanges();
-
+                ChatMessageDTO mDto = new ChatMessageDTO(m);
                 //Read Student from DB
                 Teacher? t = dbContext.Teachers.Where(ss => ss.TeacherId== tid).FirstOrDefault();
                 TeacherDTO tDto = new TeacherDTO(t);
@@ -90,7 +91,7 @@ namespace TutorLinkServer.Hubs
                 {
                     foreach (KeyValuePair<string, string> connection in connections)
                     {
-                        await Clients.Client(connection.Key).SendAsync("ReceiveMessageFromTeacher", tDto, m);
+                        await Clients.Client(connection.Key).SendAsync("ReceiveMessageFromTeacher", tDto, mDto);
                     }
                 }
             }

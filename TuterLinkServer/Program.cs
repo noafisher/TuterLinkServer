@@ -17,7 +17,11 @@ namespace TutorLinkServer
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             //Add the signalR service to the we application
-            builder.Services.AddSignalR();
+            builder.Services.AddSignalR(options =>
+            {
+                options.KeepAliveInterval = TimeSpan.FromSeconds(10);
+                options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
+            });
 
             //Add Database to dependency injection
             builder.Services.AddDbContext<NoaDBcontext>(
