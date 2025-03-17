@@ -83,7 +83,8 @@ namespace TutorLinkServer.Controllers
                 HttpContext.Session.Clear(); //Logout any previous login attempt
 
                 //Get model user class from DB with matching email. 
-                Models.Teacher? modelsTeacher = context.Teachers.Where(u => u.Email == loginDto.Email).FirstOrDefault();
+                Models.Teacher? modelsTeacher = context.Teachers.Include(t=>t.TeachersSubjects)
+                                                                .ThenInclude(ts=>ts.Subject).Where(u => u.Email == loginDto.Email).FirstOrDefault();
 
                 //Check if user exist for this email and if password match, if not return Access Denied (Error 403) 
                 if (modelsTeacher == null || modelsTeacher.Pass != loginDto.Password)
@@ -179,6 +180,42 @@ namespace TutorLinkServer.Controllers
 
         }
 
+        //get all subjects
+        [HttpGet("GetTeacherSubjects")]
+        public IActionResult GetTeacherSubjects()
+        {
+            try
+            {
+                //Check if who is logged in
+                string? userEmail = HttpContext.Session.GetString("loggedInUser");
+                if (string.IsNullOrEmpty(userEmail))
+                {
+                    return Unauthorized("User is not logged in");
+                }
+
+                //Get model user class from DB with matching email. 
+                Models.Teacher? t = context.Teachers.Include(t => t.TeachersSubjects)
+                                                    .ThenInclude(ts => ts.Subject).Where(tt => tt.Email == userEmail).FirstOrDefault();
+                List<SubjectDTO> l = new List<SubjectDTO>();
+
+                if (t != null)
+                {
+                    foreach (TeachersSubject s in t.TeachersSubjects)
+                    {
+                        l.Add(new SubjectDTO(s.Subject));
+                    }
+                }
+                return Ok(l);
+                
+
+                
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
 
         // post a review 
         [HttpPost("RateTeacher")]
@@ -186,8 +223,7 @@ namespace TutorLinkServer.Controllers
         {
             try
             {
-                HttpContext.Session.Clear(); //Logout any previous login attempt
-
+                
                 //Get model user class from DB with matching email. 
                 Models.TeacherReview reviewModel = reviewDTO.GetModels();
 
@@ -457,6 +493,29 @@ namespace TutorLinkServer.Controllers
             }
         }
 
+        [HttpGet("FindStudents")]
+        public IActionResult FindStudents([FromQuery] string search)
+        {
+            try
+            {
+                List<Student> list = context.Students.Where(s => s.FirstName.Contains(search) ||
+                                                                 s.LastName.Contains(search)).ToList();
+
+                //Create DTO USer list
+                List<DTO.StudentDTO> result = new List<StudentDTO>();
+                if (list != null)
+                {
+                    foreach (Student s in list)
+                        result.Add(new StudentDTO(s));
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
 
     }
 

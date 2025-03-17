@@ -115,6 +115,8 @@ VALUES ('ofer@ofer.com', '1234', 'Zadikario', 'Ofer', 0, 'Hashachar, 57, Raanana
 
 INSERT INTO Students(Email, Pass, LastName, FirstName, IsAdmin, UserAddress, CurrentClass)
 VALUES ('kuku@ofer.com', '1234', 'Kuku', 'Kuku', 0, 'Hashachar, 57, Hod Hasharon', 12)
+INSERT INTO Students(Email, Pass, LastName, FirstName, IsAdmin, UserAddress, CurrentClass)
+VALUES ('kuku2@ofer.com', '1234', 'Kuku2', 'Kuku2', 0, 'Hashachar, 57, Hod Hasharon', 12)
 
 INSERT INTO Lessons (TeacherID, StudentID, SubjectID, TimeOfLesson)
 VALUES
