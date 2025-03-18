@@ -9,6 +9,7 @@ namespace TutorLinkServer.DTO
         public int StudentId { get; set; }
         public int SubjectId { get; set; }
         public DateTime TimeOfLesson { get; set; }
+        public StudentDTO Student { get; set; }
 
         public LessonDTO(Models.Lesson l)
         {
@@ -18,6 +19,8 @@ namespace TutorLinkServer.DTO
             this.StudentId = l.StudentId;
             this.SubjectId = l.SubjectId;
             this.TimeOfLesson = l.TimeOfLesson;
+            if (l.Student != null)
+                this.Student = new StudentDTO(l.Student);
 
         }
 
