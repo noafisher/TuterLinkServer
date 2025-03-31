@@ -118,14 +118,15 @@ VALUES ('kuku@ofer.com', '1234', 'Kuku', 'Kuku', 0, 'Hashachar, 57, Hod Hasharon
 INSERT INTO Students(Email, Pass, LastName, FirstName, IsAdmin, UserAddress, CurrentClass)
 VALUES ('kuku2@ofer.com', '1234', 'Kuku2', 'Kuku2', 0, 'Hashachar, 57, Hod Hasharon', 12)
 
-INSERT INTO Lessons (TeacherID, StudentID, SubjectID, TimeOfLesson)
+INSERT INTO Lessons (TeacherID, StudentID, SubjectID,TimeOfLesson)
 VALUES
-(1, 1, 2, GETDATE())
+ (1,1,1, GETDATE())
 
 
 select * from Subjects
 select * from TeachersSubject
 select * from Teachers
+select * from Students
 insert into TeachersSubject(TeacherID, SubjectID, MinClass, MaxClass) VALUES (1, 2, 10,12)
 
 -- Create a login for the admin user
