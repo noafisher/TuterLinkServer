@@ -9,7 +9,7 @@ namespace TutorLinkServer.DTO
         public int StudentId { get; set; }
         public int SubjectId { get; set; }
         public DateTime TimeOfLesson { get; set; }
-        public StudentDTO Student { get; set; }
+        public StudentDTO? Student { get; set; }
 
         public LessonDTO(Models.Lesson l)
         {
