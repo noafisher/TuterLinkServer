@@ -30,7 +30,7 @@ namespace TutorLinkServer.Controllers
 
                 //Get model user class from DB with matching email. 
                 Models.Teacher modelsTeacher = teacherDTO.GetModels();
-                
+
 
                 context.Teachers.Add(modelsTeacher);
                 context.SaveChanges();
@@ -43,7 +43,7 @@ namespace TutorLinkServer.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
-                
+
             }
 
         }
@@ -64,7 +64,7 @@ namespace TutorLinkServer.Controllers
 
                 //User was added!
                 DTO.StudentDTO dtoStudent = new DTO.StudentDTO(modelsStudent);
-               dtoStudent.ProfileImagePath = GetProfileImageVirtualPath(dtoStudent.StudentId,false);
+                dtoStudent.ProfileImagePath = GetProfileImageVirtualPath(dtoStudent.StudentId, false);
                 return Ok(dtoStudent);
             }
             catch (Exception ex)
@@ -83,8 +83,8 @@ namespace TutorLinkServer.Controllers
                 HttpContext.Session.Clear(); //Logout any previous login attempt
 
                 //Get model user class from DB with matching email. 
-                Models.Teacher? modelsTeacher = context.Teachers.Include(t=>t.TeachersSubjects)
-                                                                .ThenInclude(ts=>ts.Subject).Where(u => u.Email == loginDto.Email).FirstOrDefault();
+                Models.Teacher? modelsTeacher = context.Teachers.Include(t => t.TeachersSubjects)
+                                                                .ThenInclude(ts => ts.Subject).Where(u => u.Email == loginDto.Email).FirstOrDefault();
 
                 //Check if user exist for this email and if password match, if not return Access Denied (Error 403) 
                 if (modelsTeacher == null || modelsTeacher.Pass != loginDto.Password)
@@ -146,7 +146,7 @@ namespace TutorLinkServer.Controllers
             {
                 List<Teacher> listTeachers = context.Teachers.ToList(); ;
                 List<TeacherDTO> l = new List<TeacherDTO>();
-                foreach(Teacher t in listTeachers)
+                foreach (Teacher t in listTeachers)
                 {
                     l.Add(new TeacherDTO(t));
                 }
@@ -206,9 +206,9 @@ namespace TutorLinkServer.Controllers
                     }
                 }
                 return Ok(l);
-                
 
-                
+
+
             }
             catch (Exception ex)
             {
@@ -223,7 +223,7 @@ namespace TutorLinkServer.Controllers
         {
             try
             {
-                
+
                 //Get model user class from DB with matching email. 
                 Models.TeacherReview reviewModel = reviewDTO.GetModels();
 
@@ -255,8 +255,8 @@ namespace TutorLinkServer.Controllers
 
             //Get model user class from DB with matching email. 
             Object user = null;
-            int id=0;
-            string folder="";
+            int id = 0;
+            string folder = "";
             Models.Teacher? t = context.Teachers.Where(tt => tt.Email == userEmail).FirstOrDefault();
             if (t != null)
             {
@@ -266,10 +266,10 @@ namespace TutorLinkServer.Controllers
             }
             else
             {
-                Models.Student? s = context.Students.Where(ss=>ss.Email == userEmail).FirstOrDefault();
+                Models.Student? s = context.Students.Where(ss => ss.Email == userEmail).FirstOrDefault();
                 if (s != null)
                 {
-                    user = s; 
+                    user = s;
                     id = s.StudentId;
                     folder = "Student";
                 }
@@ -330,11 +330,11 @@ namespace TutorLinkServer.Controllers
             }
             else
             {
-                DTO.StudentDTO dtoStudent= new DTO.StudentDTO((Student)user);
+                DTO.StudentDTO dtoStudent = new DTO.StudentDTO((Student)user);
                 dtoStudent.ProfileImagePath = GetProfileImageVirtualPath(id, false);
                 return Ok(dtoStudent);
             }
-            
+
         }
 
         //this function gets a file stream and check if it is an image
@@ -370,7 +370,7 @@ namespace TutorLinkServer.Controllers
         private string GetProfileImageVirtualPath(int userId, bool isTeacher)
         {
             string userType = "Student";
-            if (isTeacher) 
+            if (isTeacher)
             {
                 userType = "Teacher";
             }
@@ -456,7 +456,7 @@ namespace TutorLinkServer.Controllers
                 foreach (Lesson lesson in listLessons)
                 {
                     if (lesson.TimeOfLesson.Day == dateOnly.Day && lesson.TimeOfLesson.Month == dateOnly.Month && lesson.TimeOfLesson.Year == dateOnly.Year)
-                    l.Add(new LessonDTO(lesson));
+                        l.Add(new LessonDTO(lesson));
                 }
                 return Ok(l);
             }
@@ -515,6 +515,113 @@ namespace TutorLinkServer.Controllers
                 return BadRequest(ex.Message);
 
             }
+        }
+
+        [HttpGet("GetReportsNotProcessed")]
+        public IActionResult GetReportsNotProcessed()
+        {
+            try
+            {
+                List<Report> listReports = context.Reports.ToList(); ;
+                List<ReportDTO> l = new List<ReportDTO>();
+                foreach (Report r in listReports)
+                {
+                    if (r.Processed == false)
+                        l.Add(new ReportDTO(r));
+                }
+                return Ok(l);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("BlockStudent")]
+        public IActionResult BlockStudent([FromQuery] int id)
+        {
+            try
+            {
+                //Check if who is logged in
+                string? userEmail = HttpContext.Session.GetString("loggedInUser");
+                if (string.IsNullOrEmpty(userEmail))
+                {
+                    return Unauthorized("User is not logged in");
+                }
+
+                if (!IsAdmin(userEmail))
+                {
+                    return Unauthorized();
+                }
+
+                Student? student = context.Students.Where(s => s.StudentId == id).FirstOrDefault();
+
+                if ( student != null)
+                {
+                    student.IsBlocked = true;
+                    context.Update(student);
+                    context.SaveChanges();
+                    return Ok();
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpGet("BlockTeacher")]
+        public IActionResult BlockTeacher([FromQuery] int id)
+        {
+            try
+            {
+                //Check if who is logged in
+                string? userEmail = HttpContext.Session.GetString("loggedInUser");
+                if (string.IsNullOrEmpty(userEmail))
+                {
+                    return Unauthorized("User is not logged in");
+                }
+
+                if (!IsAdmin(userEmail))
+                {
+                    return Unauthorized();
+                }
+
+                Teacher? teacher = context.Teachers.Where(t=>t.TeacherId==id).FirstOrDefault();
+
+                if (teacher != null)
+                {
+                    teacher.IsBlocked = true;
+                    context.Update(teacher);
+                    context.SaveChanges();
+                    return Ok();
+                }
+
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        private bool IsAdmin(string email)
+        {
+            Student? student = context.Students.Where(s => s.Email == email).FirstOrDefault();
+            if (student != null)
+            {
+                return student.IsAdmin.Value;
+            }
+
+            Teacher? teacher = context.Teachers.Where(t=>t.Email == email).FirstOrDefault();
+            if (teacher != null)
+            {
+                return teacher.IsAdmin.Value;
+            }
+
+            return false;
         }
 
     }

@@ -23,6 +23,8 @@ public partial class Report
     [StringLength(500)]
     public string? ReportText { get; set; }
 
+    public bool Processed { get; set; }
+
     [ForeignKey("StudentId")]
     [InverseProperty("Reports")]
     public virtual Student Student { get; set; } = null!;

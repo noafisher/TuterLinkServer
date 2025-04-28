@@ -23,7 +23,8 @@ CREATE TABLE Teachers(
     GoToStudent bit,
     TeachAtHome bit,
     Vetek int not null, 
-    PricePerHour int not null
+    PricePerHour int not null,
+    IsBlocked bit not null default(0)
         )
 
     
@@ -36,7 +37,8 @@ CREATE TABLE Students(
     LastName nvarchar(50) not null,
     IsAdmin BIT default(0),
     UserAddress nvarchar (100) not null,
-    CurrentClass int not null
+    CurrentClass int not null,
+    IsBlocked bit not null default(0)
     )
 
 
@@ -91,6 +93,7 @@ StudentID int not null
         FOREIGN KEY(StudentID) REFERENCES Students(StudentID),
 ReportedByStudent BIT not null,
 ReportText nvarchar(500),
+Processed bit not null default(0)
 )
 
 -- Lessons 

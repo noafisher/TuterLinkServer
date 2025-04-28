@@ -31,6 +31,8 @@ public partial class Student
 
     public int CurrentClass { get; set; }
 
+    public bool IsBlocked { get; set; }
+
     [InverseProperty("Student")]
     public virtual ICollection<ChatMessage> ChatMessages { get; set; } = new List<ChatMessage>();
 

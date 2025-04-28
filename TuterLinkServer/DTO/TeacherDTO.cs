@@ -15,7 +15,7 @@
         public int PricePerHour { get; set; }
         public string ProfileImagePath { get; set; }
         public List<TeacherSubjectDTO>? TeacherSubjects { get; set; }
-
+        public bool IsBlocked { get; set; }
         public TeacherDTO() { } 
 
         public TeacherDTO(Models.Teacher teacher)
@@ -37,6 +37,7 @@
                     this.TeacherSubjects.Add(new TeacherSubjectDTO(s));
                 }
             }
+            this.IsBlocked = teacher.IsBlocked;
 
         }
 
@@ -52,7 +53,8 @@
                 UserAddress = this.UserAddress,
                 MaxDistance = this.MaxDistance,
                 Vetek = this.Vetek,
-                PricePerHour = this.PricePerHour
+                PricePerHour = this.PricePerHour,
+                IsBlocked = this.IsBlocked,
             };
 
             return modelsTeacher;

@@ -10,7 +10,7 @@
         public int CurrentClass {  get; set; }
         public string UserAddress { get; set; }
         public string ProfileImagePath { get; set; }
-
+        public bool IsBlocked { get; set; }
         public StudentDTO() { }
 
         public StudentDTO(Models.Student student) 
@@ -23,7 +23,7 @@
             this.Pass = student.Pass;
             this.CurrentClass = student.CurrentClass;
             this.UserAddress = student.UserAddress;
-
+            this.IsBlocked = student.IsBlocked;
         }
 
         public Models.Student GetModels()
@@ -36,7 +36,7 @@
                 LastName = this.LastName,
                 Pass = this.Pass,
                 UserAddress = this.UserAddress,
-                
+                IsBlocked = this.IsBlocked,
             };
 
             return modelsStudent;

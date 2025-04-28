@@ -38,6 +38,8 @@ public partial class Teacher
 
     public int PricePerHour { get; set; }
 
+    public bool IsBlocked { get; set; }
+
     [InverseProperty("Teacher")]
     public virtual ICollection<ChatMessage> ChatMessages { get; set; } = new List<ChatMessage>();
 
