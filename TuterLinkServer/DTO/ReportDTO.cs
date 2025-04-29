@@ -9,6 +9,10 @@
         public string? ReportText { get; set; }
         public bool IsProcessed { get; set; }
 
+        public StudentDTO Student { get; set; }
+        public TeacherDTO Teacher { get; set; }
+
+
         public ReportDTO(Models.Report r)
         {
 
@@ -18,6 +22,8 @@
             this.ReportedByStudent = r.ReportedByStudent;
             this.ReportText= r.ReportText;
             this.IsProcessed = r.Processed;
+            Student = new StudentDTO(r.Student);
+            Teacher = new TeacherDTO(r.Teacher);
            
         }
 
@@ -33,8 +39,10 @@
                 StudentId = this.StudentId,
                 ReportedByStudent = this.ReportedByStudent,
                 ReportText = this.ReportText,
-                Processed = this.IsProcessed
-               
+                Processed = this.IsProcessed,
+                Student = this.Student.GetModels(),
+                Teacher = this.Teacher.GetModels()
+
             };
 
             return UserReport;

@@ -16,6 +16,7 @@
         public string ProfileImagePath { get; set; }
         public List<TeacherSubjectDTO>? TeacherSubjects { get; set; }
         public bool IsBlocked { get; set; }
+        public bool IsAdmin { get; set; }
         public TeacherDTO() { } 
 
         public TeacherDTO(Models.Teacher teacher)
@@ -38,6 +39,7 @@
                 }
             }
             this.IsBlocked = teacher.IsBlocked;
+            this.IsAdmin = teacher.IsAdmin.Value;
 
         }
 
@@ -55,6 +57,7 @@
                 Vetek = this.Vetek,
                 PricePerHour = this.PricePerHour,
                 IsBlocked = this.IsBlocked,
+                IsAdmin = this.IsAdmin,
             };
 
             return modelsTeacher;

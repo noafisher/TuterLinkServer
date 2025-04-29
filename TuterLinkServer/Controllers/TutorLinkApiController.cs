@@ -144,11 +144,13 @@ namespace TutorLinkServer.Controllers
         {
             try
             {
-                List<Teacher> listTeachers = context.Teachers.ToList(); ;
+                List<Teacher> listTeachers = context.Teachers.Include(t=>t.TeachersSubjects).ThenInclude(s=>s.Subject).ToList(); ;
                 List<TeacherDTO> l = new List<TeacherDTO>();
                 foreach (Teacher t in listTeachers)
                 {
-                    l.Add(new TeacherDTO(t));
+                    TeacherDTO teacher = new TeacherDTO(t);
+                    teacher.ProfileImagePath = GetProfileImageVirtualPath(teacher.TeacherId, true);
+                    l.Add(teacher);
                 }
                 return Ok(l);
             }
@@ -257,7 +259,7 @@ namespace TutorLinkServer.Controllers
             Object user = null;
             int id = 0;
             string folder = "";
-            Models.Teacher? t = context.Teachers.Where(tt => tt.Email == userEmail).FirstOrDefault();
+            Models.Teacher? t = context.Teachers.Include(t=>t.TeachersSubjects).ThenInclude(s=>s.Subject).Where(tt => tt.Email == userEmail).FirstOrDefault();
             if (t != null)
             {
                 user = t;
@@ -402,13 +404,13 @@ namespace TutorLinkServer.Controllers
         {
             try
             {
-                HttpContext.Session.Clear(); //Logout any previous login attempt
-
+                
                 //Get model user class from DB with matching email. 
                 Models.Report reportModel = reportDTO.GetModels();
+                
 
 
-                context.Reports.Add(reportModel);
+                context.Reports.Update(reportModel);
                 context.SaveChanges();
 
                 //Review was added!
@@ -434,7 +436,9 @@ namespace TutorLinkServer.Controllers
                 List<StudentDTO> l = new List<StudentDTO>();
                 foreach (Student s in listStudents)
                 {
-                    l.Add(new StudentDTO(s));
+                    StudentDTO student = new StudentDTO(s);
+                    student.ProfileImagePath = GetProfileImageVirtualPath(student.StudentId, false);
+                    l.Add(student);
                 }
                 return Ok(l);
             }
@@ -472,8 +476,7 @@ namespace TutorLinkServer.Controllers
         {
             try
             {
-                HttpContext.Session.Clear(); //Logout any previous login attempt
-
+                
                 //Get model user class from DB with matching email. 
                 Models.Lesson lessonModel = lessonDTO.GetModels();
 
@@ -506,7 +509,12 @@ namespace TutorLinkServer.Controllers
                 if (list != null)
                 {
                     foreach (Student s in list)
-                        result.Add(new StudentDTO(s));
+                    {
+                        StudentDTO studentDTO = new StudentDTO(s);
+                        studentDTO.ProfileImagePath = GetProfileImageVirtualPath(studentDTO.StudentId, false);
+                        result.Add(studentDTO);
+                    }
+                        
                 }
                 return Ok(result);
             }
@@ -522,12 +530,19 @@ namespace TutorLinkServer.Controllers
         {
             try
             {
-                List<Report> listReports = context.Reports.ToList(); ;
+                List<Report> listReports = context.Reports.Include(r=>r.Teacher).Include(r=>r.Student).ToList(); ;
                 List<ReportDTO> l = new List<ReportDTO>();
                 foreach (Report r in listReports)
                 {
                     if (r.Processed == false)
-                        l.Add(new ReportDTO(r));
+                    {
+                        ReportDTO report = new ReportDTO(r);
+                        report.Student.ProfileImagePath = GetProfileImageVirtualPath(r.StudentId, false);
+                        report.Teacher.ProfileImagePath = GetProfileImageVirtualPath(r.TeacherId, true);
+
+                        l.Add(report);
+                    }
+                        
                 }
                 return Ok(l);
             }
@@ -571,7 +586,39 @@ namespace TutorLinkServer.Controllers
             }
         }
 
+        [HttpGet("ProcessReport")]
+        public IActionResult ProcessReport([FromQuery] int id)
+        {
+            try
+            {
+                //Check if who is logged in
+                string? userEmail = HttpContext.Session.GetString("loggedInUser");
+                if (string.IsNullOrEmpty(userEmail))
+                {
+                    return Unauthorized("User is not logged in");
+                }
 
+                if (!IsAdmin(userEmail))
+                {
+                    return Unauthorized();
+                }
+
+                Report? report = context.Reports.Where(r => r.ReportId == id).FirstOrDefault();
+
+                if (report != null)
+                {
+                    report.Processed = true;
+                    context.Update(report);
+                    context.SaveChanges();
+                    return Ok();
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpGet("BlockTeacher")]
         public IActionResult BlockTeacher([FromQuery] int id)
         {

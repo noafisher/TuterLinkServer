@@ -11,6 +11,7 @@
         public string UserAddress { get; set; }
         public string ProfileImagePath { get; set; }
         public bool IsBlocked { get; set; }
+        public bool IsAdmin { get; set; }
         public StudentDTO() { }
 
         public StudentDTO(Models.Student student) 
@@ -24,6 +25,7 @@
             this.CurrentClass = student.CurrentClass;
             this.UserAddress = student.UserAddress;
             this.IsBlocked = student.IsBlocked;
+            this.IsAdmin = student.IsAdmin.Value;
         }
 
         public Models.Student GetModels()
@@ -37,6 +39,7 @@
                 Pass = this.Pass,
                 UserAddress = this.UserAddress,
                 IsBlocked = this.IsBlocked,
+                IsAdmin= this.IsAdmin,
             };
 
             return modelsStudent;
