@@ -671,9 +671,92 @@ namespace TutorLinkServer.Controllers
             return false;
         }
 
+    
+
+     [HttpPost("UpdateStudent")]
+        public IActionResult UpdateStudent([FromBody] DTO.StudentDTO studentDto)
+        {
+            try
+            {
+                //Check if who is logged in
+                string? studentEmail = HttpContext.Session.GetString("loggedInUser");
+                if (string.IsNullOrEmpty(studentEmail))
+                {
+                    return Unauthorized("User is not logged in");
+                }
+
+                //Get model user class from DB with matching email. 
+                Models.Student? student = context.Students.Where(s => s.Email == studentEmail).FirstOrDefault();
+                //Clear the tracking of all objects to avoid double tracking
+                context.ChangeTracker.Clear();
+
+                //Check if the user that is logged in is the same user of the task
+                //this situation is ok only if the user is a manager
+                if (student == null || (student.IsAdmin == false && studentDto.StudentId != student.StudentId))
+                {
+                    return Unauthorized("Non Manager User is trying to update a different user");
+                }
+
+                Models.Student appStudent = studentDto.GetModels();
+
+                context.Entry(appStudent).State = EntityState.Modified;
+
+                context.SaveChanges();
+
+                //Task was updated!
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+
+    
+
+    [HttpPost("UpdateTeacher")]
+        public IActionResult UpdateTeacher([FromBody] DTO.TeacherDTO teacherDto)
+        {
+            try
+            {
+                //Check if who is logged in
+                string? teacherEmail = HttpContext.Session.GetString("loggedInUser");
+                if (string.IsNullOrEmpty(teacherEmail))
+                {
+                    return Unauthorized("User is not logged in");
+                }
+
+                //Get model user class from DB with matching email. 
+                Models.Teacher? teacher = context.Teachers.Where(s => s.Email == teacherEmail).FirstOrDefault();
+                //Clear the tracking of all objects to avoid double tracking
+                context.ChangeTracker.Clear();
+
+                //Check if the user that is logged in is the same user of the task
+                //this situation is ok only if the user is a manager
+                if (teacher == null || (teacher.IsAdmin == false && teacherDto.TeacherId != teacher.TeacherId))
+                {
+                    return Unauthorized("Non Manager User is trying to update a different user");
+                }
+
+                Models.Teacher appTeacher = teacherDto.GetModels();
+
+                context.Entry(appTeacher).State = EntityState.Modified;
+
+                context.SaveChanges();
+
+                //Task was updated!
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+
     }
-
-
-
 
 }
