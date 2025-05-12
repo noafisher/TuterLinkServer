@@ -133,14 +133,14 @@ select * from Students
 insert into TeachersSubject(TeacherID, SubjectID, MinClass, MaxClass) VALUES (1, 2, 10,12)
 
 -- Create a login for the admin user
-CREATE LOGIN [TaskAdminLogin] WITH PASSWORD = 'NoaF1197';
+CREATE LOGIN [TutorLinkAdminLogin] WITH PASSWORD = 'NoaF1197';
 Go
 
-CREATE USER [TaskAdminUser] FOR LOGIN [TaskAdminLogin];
+CREATE USER [TutorLinkAdminUser] FOR LOGIN [TutorLinkAdminLogin];
 Go
 
 -- Add the user to the db_owner role to grant admin privileges
-ALTER ROLE db_owner ADD MEMBER [TaskAdminUser];
+ALTER ROLE db_owner ADD MEMBER [TutorLinkAdminUser];
 Go
 
 --iinsert a fake message
@@ -150,7 +150,7 @@ INSERT INTO ChatMessages VALUES (1,1,0,'this is a fake message2', GETDATE())
 Go
 
 select * from ChatMessages
---scaffold-DbContext "Server = (localdb)\MSSQLLocalDB;Initial Catalog=TutorLink_DB;User ID=TaskAdminLogin;Password=NoaF1197;" Microsoft.EntityFrameworkCore.SqlServer -OutPutDir Models -Context NoaDBcontext -DataAnnotations -force
+--scaffold-DbContext "Server = (localdb)\MSSQLLocalDB;Initial Catalog=TutorLink_DB;User ID=TutorLinkAdminLogin;Password=NoaF1197;" Microsoft.EntityFrameworkCore.SqlServer -OutPutDir Models -Context NoaDBcontext -DataAnnotations -force
 
 
 

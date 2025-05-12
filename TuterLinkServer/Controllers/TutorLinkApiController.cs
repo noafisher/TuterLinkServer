@@ -687,12 +687,16 @@ namespace TutorLinkServer.Controllers
 
                 //Get model user class from DB with matching email. 
                 Models.Student? student = context.Students.Where(s => s.Email == studentEmail).FirstOrDefault();
+
+                //Check if the logged in user is admin
+
+                bool isAdmin = IsAdmin(studentEmail);
                 //Clear the tracking of all objects to avoid double tracking
                 context.ChangeTracker.Clear();
 
                 //Check if the user that is logged in is the same user of the task
                 //this situation is ok only if the user is a manager
-                if (student == null || (student.IsAdmin == false && studentDto.StudentId != student.StudentId))
+                if (student == null || (isAdmin == false && studentDto.StudentId != student.StudentId))
                 {
                     return Unauthorized("Non Manager User is trying to update a different user");
                 }
@@ -730,12 +734,16 @@ namespace TutorLinkServer.Controllers
 
                 //Get model user class from DB with matching email. 
                 Models.Teacher? teacher = context.Teachers.Where(s => s.Email == teacherEmail).FirstOrDefault();
+
+                //Check if the logged in user is admin
+                bool isAdmin = IsAdmin(teacherEmail);
+
                 //Clear the tracking of all objects to avoid double tracking
                 context.ChangeTracker.Clear();
 
                 //Check if the user that is logged in is the same user of the task
                 //this situation is ok only if the user is a manager
-                if (teacher == null || (teacher.IsAdmin == false && teacherDto.TeacherId != teacher.TeacherId))
+                if (teacher == null || (isAdmin == false && teacherDto.TeacherId != teacher.TeacherId))
                 {
                     return Unauthorized("Non Manager User is trying to update a different user");
                 }
