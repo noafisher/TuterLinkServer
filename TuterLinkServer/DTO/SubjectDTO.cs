@@ -53,7 +53,12 @@
                 SubjectId = this.SubjectId,
                 MinClass = this.MinClass,
                 MaxClass = this.MaxClass,
-                Id = this.Id
+                Id = this.Id,
+                Subject = new Models.Subject()
+                {
+                    SubjectId = this.SubjectId,
+                    SubjectName = this.SubjectName
+                }
             };
 
             return subject;

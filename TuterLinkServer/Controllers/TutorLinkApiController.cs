@@ -32,7 +32,7 @@ namespace TutorLinkServer.Controllers
                 Models.Teacher modelsTeacher = teacherDTO.GetModels();
 
 
-                context.Teachers.Add(modelsTeacher);
+                context.Teachers.Update(modelsTeacher);
                 context.SaveChanges();
 
                 //User was added!

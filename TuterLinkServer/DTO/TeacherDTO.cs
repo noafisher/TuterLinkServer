@@ -1,4 +1,6 @@
-﻿namespace TutorLinkServer.DTO
+﻿using TutorLinkServer.Models;
+
+namespace TutorLinkServer.DTO
 {
     public class TeacherDTO
     {
@@ -58,7 +60,17 @@
                 PricePerHour = this.PricePerHour,
                 IsBlocked = this.IsBlocked,
                 IsAdmin = this.IsAdmin,
+                
             };
+            if (this.TeacherSubjects != null)
+            {
+                modelsTeacher.TeachersSubjects = new List<TeachersSubject>();
+                foreach (TeacherSubjectDTO s in this.TeacherSubjects)
+                {
+                    modelsTeacher.TeachersSubjects.Add(s.GetModels());
+                }
+
+            }
 
             return modelsTeacher;
         }
