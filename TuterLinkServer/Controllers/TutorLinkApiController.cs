@@ -678,25 +678,24 @@ namespace TutorLinkServer.Controllers
         {
             try
             {
-                //Check if who is logged in
-                string? studentEmail = HttpContext.Session.GetString("loggedInUser");
-                if (string.IsNullOrEmpty(studentEmail))
+                //Check who is logged in
+                string? email = HttpContext.Session.GetString("loggedInUser");
+                if (string.IsNullOrEmpty(email))
                 {
                     return Unauthorized("User is not logged in");
                 }
 
-                //Get model user class from DB with matching email. 
-                Models.Student? student = context.Students.Where(s => s.Email == studentEmail).FirstOrDefault();
+                //Get model user class from DB with matching studentid. 
+                Models.Student? student = context.Students.Where(s => s.Email== email).FirstOrDefault();
 
                 //Check if the logged in user is admin
 
-                bool isAdmin = IsAdmin(studentEmail);
+                bool isAdmin = IsAdmin(email);
                 //Clear the tracking of all objects to avoid double tracking
                 context.ChangeTracker.Clear();
 
-                //Check if the user that is logged in is the same user of the task
-                //this situation is ok only if the user is a manager
-                if (student == null || (isAdmin == false && studentDto.StudentId != student.StudentId))
+                //check if a non admin user try to update a different user
+                if (!isAdmin && student == null || (!isAdmin && studentDto.StudentId != student.StudentId))
                 {
                     return Unauthorized("Non Manager User is trying to update a different user");
                 }
@@ -726,24 +725,23 @@ namespace TutorLinkServer.Controllers
             try
             {
                 //Check if who is logged in
-                string? teacherEmail = HttpContext.Session.GetString("loggedInUser");
-                if (string.IsNullOrEmpty(teacherEmail))
+                string? email = HttpContext.Session.GetString("loggedInUser");
+                if (string.IsNullOrEmpty(email))
                 {
                     return Unauthorized("User is not logged in");
                 }
 
                 //Get model user class from DB with matching email. 
-                Models.Teacher? teacher = context.Teachers.Where(s => s.Email == teacherEmail).FirstOrDefault();
+                Models.Teacher? teacher = context.Teachers.Where(s => s.Email == email).FirstOrDefault();
 
                 //Check if the logged in user is admin
-                bool isAdmin = IsAdmin(teacherEmail);
+                bool isAdmin = IsAdmin(email);
 
                 //Clear the tracking of all objects to avoid double tracking
                 context.ChangeTracker.Clear();
 
-                //Check if the user that is logged in is the same user of the task
-                //this situation is ok only if the user is a manager
-                if (teacher == null || (isAdmin == false && teacherDto.TeacherId != teacher.TeacherId))
+                //check if a non admin user try to update a different user
+                if (!isAdmin && teacher == null || (!isAdmin && teacherDto.TeacherId != teacher.TeacherId))
                 {
                     return Unauthorized("Non Manager User is trying to update a different user");
                 }
