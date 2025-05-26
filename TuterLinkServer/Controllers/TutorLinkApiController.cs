@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using TutorLinkServer.DTO;
 using TutorLinkServer.Models;
@@ -28,14 +29,14 @@ namespace TutorLinkServer.Controllers
             {
                 HttpContext.Session.Clear(); //Logout any previous login attempt
 
-                //Get model user class from DB with matching email. 
+                //Get model teacher class from DB with matching email. 
                 Models.Teacher modelsTeacher = teacherDTO.GetModels();
 
 
                 context.Teachers.Update(modelsTeacher);
                 context.SaveChanges();
 
-                //User was added!
+                //Teacher was added!
                 DTO.TeacherDTO dtoTeacher = new DTO.TeacherDTO(modelsTeacher);
                 dtoTeacher.ProfileImagePath = GetProfileImageVirtualPath(dtoTeacher.TeacherId, true);
                 return Ok(dtoTeacher);
@@ -55,14 +56,14 @@ namespace TutorLinkServer.Controllers
             {
                 HttpContext.Session.Clear(); //Logout any previous login attempt
 
-                //Get model user class from DB with matching email. 
+                //Get model student class from DB with matching email. 
                 Models.Student modelsStudent = studentDTO.GetModels();
 
 
                 context.Students.Add(modelsStudent);
                 context.SaveChanges();
 
-                //User was added!
+                //Student was added!
                 DTO.StudentDTO dtoStudent = new DTO.StudentDTO(modelsStudent);
                 dtoStudent.ProfileImagePath = GetProfileImageVirtualPath(dtoStudent.StudentId, false);
                 return Ok(dtoStudent);
@@ -82,11 +83,11 @@ namespace TutorLinkServer.Controllers
             {
                 HttpContext.Session.Clear(); //Logout any previous login attempt
 
-                //Get model user class from DB with matching email. 
+                //Get model teacher class from DB with matching email. 
                 Models.Teacher? modelsTeacher = context.Teachers.Include(t => t.TeachersSubjects)
                                                                 .ThenInclude(ts => ts.Subject).Where(u => u.Email == loginDto.Email).FirstOrDefault();
 
-                //Check if user exist for this email and if password match, if not return Access Denied (Error 403) 
+                //Check if teacher exist for this email and if password match, if not return Access Denied (Error 403) 
                 if (modelsTeacher == null || modelsTeacher.Pass != loginDto.Password)
                 {
                     return Unauthorized();
@@ -114,10 +115,10 @@ namespace TutorLinkServer.Controllers
             {
                 HttpContext.Session.Clear(); //Logout any previous login attempt
 
-                //Get model user class from DB with matching email. 
+                //Get model student class from DB with matching email. 
                 Models.Student? modelsStudent = context.Students.Where(u => u.Email == loginDto.Email).FirstOrDefault();
 
-                //Check if user exist for this email and if password match, if not return Access Denied (Error 403) 
+                //Check if student exist for this email and if password match, if not return Access Denied (Error 403) 
                 if (modelsStudent == null || modelsStudent.Pass != loginDto.Password)
                 {
                     return Unauthorized();
@@ -144,10 +145,12 @@ namespace TutorLinkServer.Controllers
         {
             try
             {
+                //list of all the exisiting teachers in the system  
                 List<Teacher> listTeachers = context.Teachers.Include(t=>t.TeachersSubjects).ThenInclude(s=>s.Subject).ToList(); ;
                 List<TeacherDTO> l = new List<TeacherDTO>();
                 foreach (Teacher t in listTeachers)
                 {
+                    //create a DTO teacher object from the model teacher object and add it to a new list of DTO teachers
                     TeacherDTO teacher = new TeacherDTO(t);
                     teacher.ProfileImagePath = GetProfileImageVirtualPath(teacher.TeacherId, true);
                     l.Add(teacher);
@@ -167,10 +170,12 @@ namespace TutorLinkServer.Controllers
         {
             try
             {
+                //create a list of all the subjects in the system
                 List<Subject> listSubjects = context.Subjects.ToList(); ;
                 List<SubjectDTO> l = new List<SubjectDTO>();
                 foreach (Subject s in listSubjects)
                 {
+                    //create a DTO subject object from the model subject object and add it to a new list of DTO subjects
                     l.Add(new SubjectDTO(s));
                 }
                 return Ok(l);
@@ -182,28 +187,30 @@ namespace TutorLinkServer.Controllers
 
         }
 
-        //get all subjects
+        //get all subjects to a specific teacher
         [HttpGet("GetTeacherSubjects")]
         public IActionResult GetTeacherSubjects()
         {
             try
             {
-                //Check if who is logged in
+                //Check who is the logged in teacher
                 string? userEmail = HttpContext.Session.GetString("loggedInUser");
                 if (string.IsNullOrEmpty(userEmail))
                 {
                     return Unauthorized("User is not logged in");
                 }
 
-                //Get model user class from DB with matching email. 
+                //Get model teacher class from DB with matching email. 
                 Models.Teacher? t = context.Teachers.Include(t => t.TeachersSubjects)
                                                     .ThenInclude(ts => ts.Subject).Where(tt => tt.Email == userEmail).FirstOrDefault();
+                //create an empty list of subjects
                 List<SubjectDTO> l = new List<SubjectDTO>();
 
                 if (t != null)
                 {
                     foreach (TeachersSubject s in t.TeachersSubjects)
                     {
+                        //create a DTO subject object from the model subject object and add it to a new list of DTO subjects
                         l.Add(new SubjectDTO(s.Subject));
                     }
                 }
@@ -226,7 +233,7 @@ namespace TutorLinkServer.Controllers
             try
             {
 
-                //Get model user class from DB with matching email. 
+                //Get model Review class from DB with matching email. 
                 Models.TeacherReview reviewModel = reviewDTO.GetModels();
 
 
@@ -235,7 +242,6 @@ namespace TutorLinkServer.Controllers
 
                 //Review was added!
                 DTO.ReviewDTO dtoReviow = new DTO.ReviewDTO(reviewModel);
-                //dtoUser.ProfileImagePath = GetProfileImageVirtualPath(dtoUser.Id);
                 return Ok(dtoReviow);
             }
             catch (Exception ex)
@@ -248,7 +254,7 @@ namespace TutorLinkServer.Controllers
         [HttpPost("UploadProfileImage")]
         public async Task<IActionResult> UploadProfileImageAsync(IFormFile file)
         {
-            //Check if who is logged in
+            //Check  who is logged in
             string? userEmail = HttpContext.Session.GetString("loggedInUser");
             if (string.IsNullOrEmpty(userEmail))
             {
@@ -455,7 +461,7 @@ namespace TutorLinkServer.Controllers
         {
             try
             {
-                List<Lesson> listLessons = context.Lessons.Include(l => l.Student).ToList(); ;
+                List<Lesson> listLessons = context.Lessons.Include(l => l.Teacher).ToList(); ;
                 List<LessonDTO> l = new List<LessonDTO>();
                 foreach (Lesson lesson in listLessons)
                 {
@@ -477,7 +483,7 @@ namespace TutorLinkServer.Controllers
             try
             {
                 
-                //Get model user class from DB with matching email. 
+                //Get model lesson class from DB with matching email. 
                 Models.Lesson lessonModel = lessonDTO.GetModels();
 
 
@@ -486,7 +492,6 @@ namespace TutorLinkServer.Controllers
 
                 //lesson was added!
                 DTO.LessonDTO dtoLesson = new DTO.LessonDTO(lessonModel);
-                //dtoUser.ProfileImagePath = GetProfileImageVirtualPath(dtoUser.Id);
                 return Ok(dtoLesson);
             }
             catch (Exception ex)
@@ -504,12 +509,13 @@ namespace TutorLinkServer.Controllers
                 List<Student> list = context.Students.Where(s => s.FirstName.Contains(search) ||
                                                                  s.LastName.Contains(search)).ToList();
 
-                //Create DTO USer list
+                //Create DTO studnet list
                 List<DTO.StudentDTO> result = new List<StudentDTO>();
                 if (list != null)
                 {
                     foreach (Student s in list)
                     {
+                        //create a DTO student object from the model student and add it to a new list of DTO students
                         StudentDTO studentDTO = new StudentDTO(s);
                         studentDTO.ProfileImagePath = GetProfileImageVirtualPath(studentDTO.StudentId, false);
                         result.Add(studentDTO);
@@ -530,6 +536,7 @@ namespace TutorLinkServer.Controllers
         {
             try
             {
+                //this function will return all the reports that were not processed yet
                 List<Report> listReports = context.Reports.Include(r=>r.Teacher).Include(r=>r.Student).ToList(); ;
                 List<ReportDTO> l = new List<ReportDTO>();
                 foreach (Report r in listReports)
@@ -557,7 +564,7 @@ namespace TutorLinkServer.Controllers
         {
             try
             {
-                //Check if who is logged in
+                //Check  who is logged in
                 string? userEmail = HttpContext.Session.GetString("loggedInUser");
                 if (string.IsNullOrEmpty(userEmail))
                 {
@@ -570,7 +577,7 @@ namespace TutorLinkServer.Controllers
                 }
 
                 Student? student = context.Students.Where(s => s.StudentId == id).FirstOrDefault();
-
+                //block the student if he exist in the system
                 if ( student != null)
                 {
                     student.IsBlocked = true;
@@ -591,7 +598,7 @@ namespace TutorLinkServer.Controllers
         {
             try
             {
-                //Check if who is logged in
+                //Check who is logged in
                 string? userEmail = HttpContext.Session.GetString("loggedInUser");
                 if (string.IsNullOrEmpty(userEmail))
                 {
@@ -605,6 +612,7 @@ namespace TutorLinkServer.Controllers
 
                 Report? report = context.Reports.Where(r => r.ReportId == id).FirstOrDefault();
 
+                //if the report exist in the system, mark it as processed
                 if (report != null)
                 {
                     report.Processed = true;
@@ -638,6 +646,7 @@ namespace TutorLinkServer.Controllers
 
                 Teacher? teacher = context.Teachers.Where(t=>t.TeacherId==id).FirstOrDefault();
 
+                //block the teacher if he exist in the system
                 if (teacher != null)
                 {
                     teacher.IsBlocked = true;
@@ -656,6 +665,7 @@ namespace TutorLinkServer.Controllers
 
         private bool IsAdmin(string email)
         {
+            //this function will check if the user is admin or not
             Student? student = context.Students.Where(s => s.Email == email).FirstOrDefault();
             if (student != null)
             {
@@ -685,10 +695,10 @@ namespace TutorLinkServer.Controllers
                     return Unauthorized("User is not logged in");
                 }
 
-                //Get model user class from DB with matching studentid. 
+                //Get model student class from DB with matching studentid. 
                 Models.Student? student = context.Students.Where(s => s.Email== email).FirstOrDefault();
 
-                //Check if the logged in user is admin
+                //Check if the logged in student is admin
 
                 bool isAdmin = IsAdmin(email);
                 //Clear the tracking of all objects to avoid double tracking
@@ -724,14 +734,14 @@ namespace TutorLinkServer.Controllers
         {
             try
             {
-                //Check if who is logged in
+                //Check who is logged in
                 string? email = HttpContext.Session.GetString("loggedInUser");
                 if (string.IsNullOrEmpty(email))
                 {
                     return Unauthorized("User is not logged in");
                 }
 
-                //Get model user class from DB with matching email. 
+                //Get model teacher class from DB with matching email. 
                 Models.Teacher? teacher = context.Teachers.Where(s => s.Email == email).FirstOrDefault();
 
                 //Check if the logged in user is admin
@@ -762,6 +772,128 @@ namespace TutorLinkServer.Controllers
 
         }
 
+        //Helper functions
+        #region Backup / Restore
+        [HttpGet("Backup")]
+        public async Task<IActionResult> Backup()
+        {
+            string path = $"{this.webHostEnvironment.WebRootPath}\\..\\DBScripts\\backup.bak";
+            try
+            {
+                System.IO.File.Delete(path);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            bool success = await BackupDatabaseAsync(path);
+            if (success)
+            {
+                return Ok("Backup was successful");
+            }
+            else
+            {
+                return BadRequest("Backup failed");
+            }
+        }
+
+        [HttpGet("Restore")]
+        public async Task<IActionResult> Restore()
+        {
+            string path = $"{this.webHostEnvironment.WebRootPath}\\..\\DBScripts\\backup.bak";
+
+            bool success = await RestoreDatabaseAsync(path);
+            if (success)
+            {
+                return Ok("Restore was successful");
+            }
+            else
+            {
+                return BadRequest("Restore failed");
+            }
+        }
+        //this function backup the database to a specified path
+        private async Task<bool> BackupDatabaseAsync(string path)
+        {
+            try
+            {
+
+                //Get the connection string
+                string? connectionString = context.Database.GetConnectionString();
+                //Get the database name
+                string databaseName = context.Database.GetDbConnection().Database;
+                //Build the backup command
+                string command = $"BACKUP DATABASE {databaseName} TO DISK = '{path}'";
+                //Create a connection to the database
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    //Open the connection
+                    await connection.OpenAsync();
+                    //Create a command
+                    using (SqlCommand sqlCommand = new SqlCommand(command, connection))
+                    {
+                        //Execute the command
+                        await sqlCommand.ExecuteNonQueryAsync();
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
+
+        //THis function restore the database from a backup in a certain path
+        private async Task<bool> RestoreDatabaseAsync(string path)
+        {
+            try
+            {
+                //Get the connection string
+                string? connectionString = context.Database.GetConnectionString();
+                //Get the database name
+                string databaseName = context.Database.GetDbConnection().Database;
+                //Build the restore command
+                string command = $@"
+               USE master;
+               DECLARE @latestBackupSet INT;
+               SELECT TOP 1 @latestBackupSet = position
+               FROM msdb.dbo.backupset
+               WHERE database_name = '{databaseName}'
+               AND backup_set_id IN (
+                     SELECT backup_set_id
+                     FROM msdb.dbo.backupmediafamily
+                     WHERE physical_device_name = '{path}'
+                 )
+               ORDER BY backup_start_date DESC;
+                ALTER DATABASE {databaseName} SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+                RESTORE DATABASE {databaseName} FROM DISK = '{path}' 
+                WITH FILE=@latestBackupSet,
+                REPLACE;
+                ALTER DATABASE {databaseName} SET MULTI_USER;";
+
+                //Create a connection to the database
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    //Open the connection
+                    await connection.OpenAsync();
+                    //Create a command
+                    using (SqlCommand sqlCommand = new SqlCommand(command, connection))
+                    {
+                        //Execute the command
+                        await sqlCommand.ExecuteNonQueryAsync();
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
+        #endregion
 
     }
 

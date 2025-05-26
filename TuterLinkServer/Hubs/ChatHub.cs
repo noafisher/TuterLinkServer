@@ -101,6 +101,11 @@ namespace TutorLinkServer.Hubs
             }
 
         }
+
+
+        /// Called when a student connects to the chat.
+        /// Adds the student to the list of connected users and loads their message history.
+        /// Messages are grouped by teacher and returned to the client.
         public async Task<List<MessagesFromTeacher>> OnStudentConnect(string studentId)
         {
             int sid = int.Parse(studentId);
@@ -136,6 +141,10 @@ namespace TutorLinkServer.Hubs
             return output;
         }
 
+
+        /// Called when a teacher connects to the chat.
+        /// Adds the teacher to the list of connected users and loads their message history.
+        /// Messages are grouped by student and returned to the client.
         public async Task<List<MessagesFromStudent>> OnTeacherConnect(string teacherId)
         {
             int tid = int.Parse(teacherId);

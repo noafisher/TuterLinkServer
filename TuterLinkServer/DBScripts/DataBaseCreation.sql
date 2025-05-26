@@ -112,14 +112,44 @@ TimeOfLesson datetime not null,
 
 INSERT INTO Subjects (SubjectName) VALUES ('Math')
 INSERT INTO Subjects (SubjectName) VALUES ('Computer Science')
+INSERT INTO Subjects (SubjectName) VALUES ('English')
+INSERT INTO Subjects (SubjectName) VALUES ('Biology')
+INSERT INTO Subjects (SubjectName) VALUES ('Chemistry')
+INSERT INTO Subjects (SubjectName) VALUES ('Physics')
+INSERT INTO Subjects (SubjectName) VALUES ('History')
+INSERT INTO Subjects (SubjectName) VALUES ('Geography')
+INSERT INTO Subjects (SubjectName) VALUES ('Literature')
+INSERT INTO Subjects (SubjectName) VALUES ('Art')
+INSERT INTO Subjects (SubjectName) VALUES ('Music')
+INSERT INTO Subjects (SubjectName) VALUES ('Civics')
+INSERT INTO Subjects (SubjectName) VALUES ('Physical Education')
+INSERT INTO Subjects (SubjectName) VALUES ('Psychology')
+INSERT INTO Subjects (SubjectName) VALUES ('Economics')
+INSERT INTO Subjects (SubjectName) VALUES ('Philosophy')
+
+
+
 
 INSERT INTO Teachers (Email, Pass, LastName, FirstName, IsAdmin, UserAddress, GoToStudent, TeachAtHome, Vetek, PricePerHour, MaxDistance)
 VALUES ('ofer@ofer.com', '1234', 'Zadikario', 'Ofer', 0, 'Hashachar, 57, Raanana', 0, 1, 3, 100, 0)
+INSERT INTO Teachers (Email, Pass, LastName, FirstName, IsAdmin,UserAddress, GoToStudent, TeachAtHome, Vetek, PricePerHour,MaxDistance)
+VALUES ('nirfisher@gmail.com', '1234', 'Fisher', 'Nir', 0,'Hashachar, 57, Hod Hasharon', 0, 1, 3, 150,0)
+INSERT INTO Teachers (Email, Pass, LastName, FirstName, IsAdmin, UserAddress, GoToStudent, TeachAtHome, Vetek, PricePerHour,MaxDistance)
+VALUES ('galip@gmail.com', '1234', 'Fisher', 'Nir', 0,'Hashachar, 57, Hod Hasharon', 0, 1, 3, 150,0)
+INSERT INTO Teachers (Email, Pass, LastName, FirstName, IsAdmin,UserAddress, GoToStudent, TeachAtHome, Vetek, PricePerHour,MaxDistance)
+VALUES ('eilonp12@gmail.com', '0000', 'Peretz', 'Eilon', 1,'Hashachar, 57, Hod Hasharon' ,0, 1, 3, 150,0)
+
+
 
 INSERT INTO Students(Email, Pass, LastName, FirstName, IsAdmin, UserAddress, CurrentClass)
 VALUES ('kuku@ofer.com', '1234', 'Kuku', 'Kuku', 0, 'Hashachar, 57, Hod Hasharon', 12)
 INSERT INTO Students(Email, Pass, LastName, FirstName, IsAdmin, UserAddress, CurrentClass)
 VALUES ('kuku2@ofer.com', '1234', 'Kuku2', 'Kuku2', 0, 'Hashachar, 57, Hod Hasharon', 12)
+INSERT INTO Students(Email, Pass, LastName, FirstName, IsAdmin,UserAddress, CurrentClass)
+VALUES ('amitchacham1@gmail.com', '1111', 'Chacham', 'Amit', 0,'Hashachar, 57, Hod Hasharon', 12)
+INSERT INTO Students(Email, Pass, LastName, FirstName, IsAdmin,UserAddress, CurrentClass)
+VALUES ('noa.fisher.2007@gmail.com', '1197', 'Fisher', 'Noa', 0,'Hashachar, 57, Hod Hasharon', 12)
+
 
 INSERT INTO Lessons (TeacherID, StudentID, SubjectID,TimeOfLesson)
 VALUES
