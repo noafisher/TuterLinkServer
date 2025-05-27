@@ -188,3 +188,5 @@ select * from ChatMessages
 
 INSERT INTO Teachers (Email, Pass, LastName, FirstName, IsAdmin, UserAddress, GoToStudent, TeachAtHome, Vetek, PricePerHour, MaxDistance)
 VALUES ('a@a.com', 'a', 'Zadikario', 'Admin', 1, 'Hashachar, 57, Raanana', 0, 1, 3, 100, 0)
+
+select * from TeachersSubject

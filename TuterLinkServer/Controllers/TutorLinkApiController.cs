@@ -758,8 +758,8 @@ namespace TutorLinkServer.Controllers
 
                 Models.Teacher appTeacher = teacherDto.GetModels();
 
-                context.Entry(appTeacher).State = EntityState.Modified;
-
+                //context.Entry(appTeacher).State = EntityState.Modified;
+                context.Teachers.Update(appTeacher);
                 context.SaveChanges();
 
                 //Task was updated!
