@@ -410,26 +410,53 @@ namespace TutorLinkServer.Controllers
         {
             try
             {
-                
-                //Get model user class from DB with matching email. 
+                // DTO => Model
                 Models.Report reportModel = reportDTO.GetModels();
-                
 
+                // 🔧 טיפול ב-Subjects דרך TeachersSubjects
+                foreach (var teacherSubject in reportModel.Teacher.TeachersSubjects)
+                {
+                    var existingSubject = context.Subjects
+                        .FirstOrDefault(s => s.SubjectId == teacherSubject.Subject.SubjectId);
 
+                    if (existingSubject != null)
+                    {
+                        teacherSubject.Subject = existingSubject;
+                    }
+                    else
+                    {
+                        context.Subjects.Add(teacherSubject.Subject);
+                    }
+                }
+
+                // 🔧 טיפול במורה (אם צריך)
+                var existingTeacher = context.Teachers
+                    .Include(t => t.TeachersSubjects)
+                    .FirstOrDefault(t => t.TeacherId == reportModel.Teacher.TeacherId);
+
+                if (existingTeacher != null)
+                {
+                    reportModel.Teacher = existingTeacher;
+                }
+                else
+                {
+                    context.Teachers.Add(reportModel.Teacher);
+                }
+
+                // עדכון הדו"ח
                 context.Reports.Update(reportModel);
                 context.SaveChanges();
 
-                //Review was added!
+                // החזרת DTO
                 DTO.ReportDTO dtoReport = new DTO.ReportDTO(reportModel);
-                //dtoUser.ProfileImagePath = GetProfileImageVirtualPath(dtoUser.Id);
                 return Ok(dtoReport);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
-
             }
         }
+
 
 
         //get all students
@@ -727,9 +754,8 @@ namespace TutorLinkServer.Controllers
         }
 
 
-    
 
-    [HttpPost("UpdateTeacher")]
+        [HttpPost("UpdateTeacher")]
         public IActionResult UpdateTeacher([FromBody] DTO.TeacherDTO teacherDto)
         {
             try
@@ -758,6 +784,22 @@ namespace TutorLinkServer.Controllers
 
                 Models.Teacher appTeacher = teacherDto.GetModels();
 
+                // 🔧 טיפול ב-Subjects דרך TeachersSubjects
+                foreach (var teacherSubject in appTeacher.TeachersSubjects)
+                {
+                    var existingSubject = context.Subjects
+                        .FirstOrDefault(s => s.SubjectId == teacherSubject.Subject.SubjectId);
+
+                    if (existingSubject != null)
+                    {
+                        teacherSubject.Subject = existingSubject;
+                    }
+                    else
+                    {
+                        context.Subjects.Add(teacherSubject.Subject);
+                    }
+                }
+
                 //context.Entry(appTeacher).State = EntityState.Modified;
                 context.Teachers.Update(appTeacher);
                 context.SaveChanges();
@@ -769,8 +811,8 @@ namespace TutorLinkServer.Controllers
             {
                 return BadRequest(ex.Message);
             }
-
         }
+
 
         //Helper functions
         #region Backup / Restore

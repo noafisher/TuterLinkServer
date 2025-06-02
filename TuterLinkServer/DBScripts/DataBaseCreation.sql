@@ -156,6 +156,17 @@ VALUES
  (1,1,1, GETDATE())
 
 
+Insert into TeachersSubject(TeacherID, SubjectID, MinClass, MaxClass) VALUES (2, 1,6,12)
+insert into TeachersSubject(TeacherID, SubjectID, MinClass, MaxClass) VALUES (2, 2,6,12)
+insert into TeachersSubject(TeacherID, SubjectID, MinClass, MaxClass) VALUES (2, 3,6,12)
+insert into TeachersSubject(TeacherID, SubjectID, MinClass, MaxClass) VALUES (3, 4,6,12)
+insert into TeachersSubject(TeacherID, SubjectID, MinClass, MaxClass) VALUES (3, 5,6,12)
+insert into TeachersSubject(TeacherID, SubjectID, MinClass, MaxClass) VALUES (3, 6,6,12)
+Insert into TeachersSubject(TeacherID, SubjectID, MinClass, MaxClass) VALUES (4, 1,6,12)
+insert into TeachersSubject(TeacherID, SubjectID, MinClass, MaxClass) VALUES (4, 6,6,12)
+insert into TeachersSubject(TeacherID, SubjectID, MinClass, MaxClass) VALUES (5, 2,6,12)
+insert into TeachersSubject(TeacherID, SubjectID, MinClass, MaxClass) VALUES (5, 7,6,12)
+
 select * from Subjects
 select * from TeachersSubject
 select * from Teachers
