@@ -488,7 +488,7 @@ namespace TutorLinkServer.Controllers
         {
             try
             {
-                List<Lesson> listLessons = context.Lessons.Include(l => l.Teacher).ToList(); ;
+                List<Lesson> listLessons = context.Lessons.Include(l => l.Teacher).Include(l=>l.Student).ToList(); ;
                 List<LessonDTO> l = new List<LessonDTO>();
                 foreach (Lesson lesson in listLessons)
                 {
